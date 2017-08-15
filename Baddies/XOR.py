@@ -16,23 +16,31 @@ from Projectiles.bb import BB
 class XOR(Baddie):
     """
     A scary-looking, stronger baddie that fires lots of BBs.
+
+    kwargs must contain:
+        owner
+        centerx
+        centery
+        floors
+        l_walls
+        r_walls
+        ceilings
+        fired_projectiles
+        targets
     """
 
-    def __init__(self, owner, centerx, centery, floors=None, l_walls=None,
-        r_walls=None, ceilings=None, fired_projectiles=None, targets=None):
+    def __init__(self, kwargs):
 
         images = {'neutral': 'XOR.png'}
 
-        Baddie.__init__(
-            self, owner,
-            centerx, centery,
-            images,
-            floors, l_walls, r_walls, ceilings,
-            fpi=4,
-            projectile=BB, num_projectiles=12,
-            fired_projectiles=fired_projectiles, targets=targets,
-            hp=3,
-            points=20)
+        kwargs["images"]           = images
+        kwargs["fpi"]              = 4
+        kwargs["projectile_class"] = BB
+        kwargs["num_projectiles"]  = 12
+        kwargs["hp"]               = 3
+        kwargs["points"]           = 20
+
+        Baddie.__init__(self, kwargs)
 
     # XOR has small collision and hit areas
         self._c_rect = self.rect.copy().inflate(-18, -18)

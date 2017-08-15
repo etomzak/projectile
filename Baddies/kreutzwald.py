@@ -15,22 +15,31 @@ from Classes.baddie import Baddie
 class Kreutzwald(Baddie):
     """
     An eminently poppable baddie that doesn't attack.
+
+    kwargs must contain:
+        owner
+        centerx
+        centery
+        floors
+        l_walls
+        r_walls
+        ceilings
+        fired_projectiles
+        targets
     """
 
-    def __init__(self, owner, centerx, centery, floors=None, l_walls=None,
-        r_walls=None, ceilings=None, fired_projectiles=None, targets=None):
+    def __init__(self, kwargs):
 
         images = {'neutral': 'Kreutzwald.png'}
 
-        Baddie.__init__(
-            self, owner,
-            centerx, centery,
-            images,
-            floors, l_walls, r_walls, ceilings,
-            fpi=4,
-            projectile=None, num_projectiles=0, targets=targets,
-            hp=1,
-            points=5)
+        kwargs["images"]           = images
+        kwargs["fpi"]              = 4
+        kwargs["projectile_class"] = None
+        kwargs["num_projectiles"]  = 0
+        kwargs["hp"]               = 1
+        kwargs["points"]           = 5
+
+        Baddie.__init__(self, kwargs)
 
     # Movement characteristics
         # Kreutzwald is so slow-moving that its location is internally stored
@@ -40,8 +49,8 @@ class Kreutzwald(Baddie):
         self._speed = 1.0                   # Absolute velocity
         self._dir = math.radians(random.randint(0, 359))
                                             # Direction of movement (degrees)
-        self._xf = float(centerx)           # x-coordinate as float
-        self._yf = float(centery)           # y-coordinate as float
+        self._xf = float(kwargs["centerx"]) # x-coordinate as float
+        self._yf = float(kwargs["centery"]) # y-coordinate as float
 
 
     def update(self):

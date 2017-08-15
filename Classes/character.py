@@ -17,22 +17,17 @@ class Character(PSprite):
     """
     Base class for all characters (player-controlled and NPC).
 
-    @param centerx: Character spawn x-coordinate
-    @param centery: Character spawn y-coordinate
-    @param images: Dictionary pointing to the Character's image files. It's
-        assumed that all Characters will have at least a 'neutral' image in
-        the dictionary.
-    @param floors: pygame.Group of Platforms that the sprite can stand on
-    @param l_walls: pygame.Group of Walls that block the sprite moving right
-    @param r_walls: pygame.Group of Walls that block the sprite moving left
-    @param ceilings: pygame.Group of Platforms that the sprite is stuck under
-    @param hp: Hit points (strength) of this Character
+    kwargs must contain:
+        centerx: Character spawn x-coordinate
+        centery: Character spawn y-coordinate
+        images["neutral"]: default image (see also PSprite)
+        hp: Hit points (strength) of this Character
+        ... and whatever is required by PSprite
     """
 
-    def __init__(self, centerx, centery, images, floors=None, l_walls=None,
-        r_walls=None, ceilings=None, hp=1):
+    def __init__(self, kwargs):
 
-        PSprite.__init__(self, images, floors, l_walls, r_walls, ceilings)
+        PSprite.__init__(self, kwargs)
 
     # Initialize image and related variables (images loaded by
     #   Character.__init__())
@@ -45,12 +40,12 @@ class Character(PSprite):
         self.rect = self.image.get_rect()
         self.radius = (self.rect.width + self.rect.height) / 4.0
 
-        self.rect.centerx = centerx
-        self.rect.centery = centery
+        self.rect.centerx = kwargs["centerx"]
+        self.rect.centery = kwargs["centery"]
         self._c_rect = self.rect.copy()
 
-        self.hp = hp
-        self._max_hp = hp
+        self.hp = kwargs["hp"]
+        self._max_hp = kwargs["hp"]
 
     # If this Character is currently active (hit-able, moveable, visible)
         self.active = True

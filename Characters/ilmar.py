@@ -16,10 +16,19 @@ from Projectiles.slug import Slug
 class Ilmar(Player):
     """
     An awesome, invincible tank!! (But it has a bad habbit of blowing up...)
+
+    kwargs must contain:
+        centerx
+        centery
+        floors
+        l_walls
+        r_walls
+        ceilings
+        targets
+        fired_projectiles
     """
 
-    def __init__(self, centerx, centery, floors=None, l_walls=None,
-        r_walls=None, ceilings=None, targets=None, fired_projectiles=None):
+    def __init__(self, kwargs):
 
         images = {'neutral': 'Ilmar_stand_straight.png',
                   'walk': {'right': {'straight': ['Ilmar_walk_straight.png'],
@@ -33,18 +42,19 @@ class Ilmar(Player):
                                     'down': ['Ilmar_fly_straight.png']}},
                   'dead': ['Ilmar_dead.png']}
 
-        Player.__init__(
-            self,
-            centerx, centery,
-            images,
-            floors, l_walls, r_walls, ceilings,
-            horizontal_speed=3.0, horizontal_inertia=40.0,
-            multi_jumps=1, vertical_acceleration=0.1, jump_velocity=-5.0,
-            fpi=4,
-            projectile=Slug, num_projectiles=5,
-            targets=targets,
-            fired_projectiles=fired_projectiles,
-            hp=1) # Ilmar's hp is never reduced so is effectively infinite
+        kwargs["images"]                = images
+        kwargs["horizontal_speed"]      = 3.0
+        kwargs["horizontal_inertia"]    = 40.0
+        kwargs["multi_jumps"]           = 1
+        kwargs["vertical_acceleration"] = 0.1
+        kwargs["jump_velocity"]         = -5.0
+        kwargs["fpi"]                   = 4
+        kwargs["projectile_class"]      = Slug
+        kwargs["num_projectiles"]       = 5
+        # Ilmar's hp is never reduced so is effectively infinite
+        kwargs["hp"]                    = 1
+
+        Player.__init__(self, kwargs)
 
 
     def fire(self):

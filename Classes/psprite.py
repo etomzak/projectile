@@ -17,25 +17,25 @@ class PSprite(pygame.sprite.Sprite):
 
     Provides various utility functions.
 
-    @param images: Dictionary pointing to the sprite's image files
-    @param floors: pygame.Group of Platforms that the sprite can stand on
-    @param l_walls: pygame.Group of Walls that block the sprite moving right
-    @param r_walls: pygame.Group of Walls that block the sprite moving left
-    @param ceilings: pygame.Group of Platforms that the sprite is stuck under
+    kwargs must contain:
+        images: Dictionary pointing to the sprite's image files
+        floors: pygame.Group of Platforms that the sprite can stand on
+        l_walls: pygame.Group of Walls that block the sprite moving right
+        r_walls: pygame.Group of Walls that block the sprite moving left
+        ceilings: pygame.Group of Platforms that the sprite is stuck under
     """
 
-    def __init__(self, images=None, floors=None, l_walls=None, r_walls=None,
-        ceilings=None):
+    def __init__(self, kwargs):
 
         pygame.sprite.Sprite.__init__(self)
 
     # Determine image directory and load images
         # Some sprites might not load images from disk
-        if images is not None:
+        if kwargs["images"] is not None:
             class_path = os.path.split(os.path.abspath(__file__))[0]
             self._image_dir = os.path.join(os.path.dirname(class_path),
                 "Images")
-            self._images = self._string_to_image(images)
+            self._images = self._string_to_image(kwargs["images"])
 
         # Dummy rect (real one should come from a subclass)
         self.rect = Rect(0,0,0,0)
@@ -44,30 +44,30 @@ class PSprite(pygame.sprite.Sprite):
         #   a different size than the drawing Rect.
         self._c_rect = self.rect.copy()
 
+        self.floors = kwargs["floors"]
+        self.l_walls = kwargs["l_walls"]
+        self.r_walls = kwargs["r_walls"]
+        self.ceilings = kwargs["ceilings"]
+
     # If barriers (platforms and walls) not given, set to empty
-        if floors is None:
-            floors = pygame.sprite.RenderPlain(())
-        if l_walls is None:
-            l_walls = pygame.sprite.RenderPlain(())
-        if r_walls is None:
-            r_walls = pygame.sprite.RenderPlain(())
-        if ceilings is None:
-            ceilings = pygame.sprite.RenderPlain(())
+        if self.floors is None:
+            self.floors = pygame.sprite.RenderPlain(())
+        if self.l_walls is None:
+            self.l_walls = pygame.sprite.RenderPlain(())
+        if self.r_walls is None:
+            self.r_walls = pygame.sprite.RenderPlain(())
+        if self.ceilings is None:
+            self.ceilings = pygame.sprite.RenderPlain(())
 
     # Make sure the barriers are of the right type
-        if not isinstance(floors, pygame.sprite.Group):
+        if not isinstance(self.floors, pygame.sprite.Group):
             raise TypeError("floors must be a pygame.sprite.Group")
-        if not isinstance(l_walls, pygame.sprite.Group):
+        if not isinstance(self.l_walls, pygame.sprite.Group):
             raise TypeError("l_walls must be a pygame.sprite.Group")
-        if not isinstance(r_walls, pygame.sprite.Group):
+        if not isinstance(self.r_walls, pygame.sprite.Group):
             raise TypeError("r_walls must be a pygame.sprite.Group")
-        if not isinstance(ceilings, pygame.sprite.Group):
+        if not isinstance(self.ceilings, pygame.sprite.Group):
             raise TypeError("ceilings must be a pygame.sprite.Group")
-
-        self.floors = floors
-        self.l_walls = l_walls
-        self.r_walls = r_walls
-        self.ceilings = ceilings
 
 
     def _string_to_image(self, obj):

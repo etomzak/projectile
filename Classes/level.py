@@ -243,16 +243,17 @@ class Level():
         i = random.randint(0, len(self._baddie_classes)-1)
         baddie = sorted(self._baddie_classes.keys())[i]
 
-        self.baddies.add(self._baddie_classes[baddie](
-            owner             = self,
-            centerx           = centerx,
-            centery           = centery,
-            floors            = self.floors,
-            l_walls           = self.l_walls,
-            r_walls           = self.r_walls,
-            ceilings          = self.ceilings,
-            fired_projectiles = self.baddie_projectiles,
-            targets           = self._player_group))
+        kwargs = {"owner"             : self,
+                  "centerx"           : centerx,
+                  "centery"           : centery,
+                  "floors"            : self.floors,
+                  "l_walls"           : self.l_walls,
+                  "r_walls"           : self.r_walls,
+                  "ceilings"          : self.ceilings,
+                  "fired_projectiles" : self.baddie_projectiles,
+                  "targets"           : self._player_group}
+
+        self.baddies.add(self._baddie_classes[baddie](kwargs))
 
 
 if __name__ == '__main__':

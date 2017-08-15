@@ -53,19 +53,18 @@ class Projectile(PSprite):
                                             something
     """
 
-    def __init__(self, owner=None, images=None, platforms=None, walls=None,
-             speed=6.0, damage=1, targets=None, max_in_flight=5, shots=10):
+    def __init__(self, kwargs):
 
-        PSprite.__init__(
-            self, images,
-            floors=platforms,
-            l_walls=walls,
-            r_walls=walls,
-            ceilings=platforms)
+        kwargs["floors"]   = kwargs["platforms"]
+        kwargs["l_walls"]  = kwargs["walls"]
+        kwargs["r_walls"]  = kwargs["walls"]
+        kwargs["ceilings"] = kwargs["platforms"]
 
-        self._owner = owner
-        self.shots = shots
-        self.max_in_flight = max_in_flight
+        PSprite.__init__(self, kwargs)
+
+        self._owner = kwargs["owner"]
+        self.shots = kwargs["shots"]
+        self.max_in_flight = kwargs["max_in_flight"]
 
     # The constructor above sets up _images
     # Define image and rect; pygame uses these for drawing
@@ -75,14 +74,14 @@ class Projectile(PSprite):
         self.radius = (self.rect.width + self.rect.height) / 4.0
 
     # Set class variables
-        self._speed = speed
-        self.damage = damage
+        self._speed = kwargs["speed"]
+        self.damage = kwargs["damage"]
         self._dir = 0 #direction
 
         # If the Projectile has collided with something
         self.has_collided = False
 
-        self.targets = targets
+        self.targets = kwargs["targets"]
         if self.targets is None:
             self.targets = pygame.sprite.RenderPlain()
 

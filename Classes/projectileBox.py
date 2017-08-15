@@ -5,7 +5,7 @@
 # This software comes with ABSOLUTELY NO WARRANTY.
 # See GPLv3.txt for details.
 
-import sys, pygame, os, inspect
+import sys, pygame, os, inspect, copy
 from pygame.locals import *
 
 # Add parent directory to path
@@ -20,78 +20,90 @@ class ProjectileBox(PSprite):
 
     Acts a bit like a pygame.sprite.Group, but can be drawn like a sprite.
 
-    @param owner: Character that owns this Box. Must have a box_empty()
-                  method.
-    @param floors: pygame.sprite.Group of Platforms to be passed to Projectiles
-    @param l_walls: pygame.sprite.Group of Walls to be passed to Projectiles
-    @param r_walls: pygame.sprtie.Group of Walls to be passed to Projectiles
-    @param ceilings: pygame.sprite.Group of Platforms to be passed to
-                     Projectiles
-    @param projectile_class: The Projectile class stored by this Box
-    @param fired_projectiles: pygame.sprite.Group where in-flight Projectiles
-                              should go (so Projectiles can outlive the Box)
-    @param num_projectiles: Maximum number of simultaneous in-flight
-                            Projectiles (None = Projectile default)
-    @param max_shots: Number of Projectiles that can be fired before the Box
-                      is exhausted (negative = infinite;
-                      None = Projectile default)
-    @param targets: pygame.sprite.Group of Characters that the Projectiles
-                    in the Box might hit
-    @param centerx: X-coordinate (only needed if Box is to be drawn)
-    @param centery: Y-coordinate (only needed if Box is to be drawn)
+    kwargs must contain:
+        owner: Character that owns this Box. Must have a box_empty() method.
+        floors: pygame.sprite.Group of Platforms to be passed to Projectiles
+        l_walls: pygame.sprite.Group of Walls to be passed to Projectiles
+        r_walls: pygame.sprtie.Group of Walls to be passed to Projectiles
+        ceilings: pygame.sprite.Group of Platforms to be passed to Projectiles
+        projectile_class: The Projectile class stored by this Box
+        fired_projectiles: pygame.sprite.Group where in-flight Projectiles
+                           should go (so Projectiles can outlive the Box)
+        num_projectiles: Maximum number of simultaneous in-flight
+                         Projectiles (None = Projectile default)
+        max_shots: Number of Projectiles that can be fired before the Box
+                   is exhausted (negative = infinite;
+                   None = Projectile default)
+        targets: pygame.sprite.Group of Characters that the Projectiles
+                 in the Box might hit
+        centerx: X-coordinate (only needed if Box is to be drawn)
+        centery: Y-coordinate (only needed if Box is to be drawn)
+        ... and whatever is required by PSprite
     """
 
-    def __init__(self, owner=None, floors=None, l_walls=None, r_walls=None,
-            ceilings=None, projectile_class=None, fired_projectiles=None,
-            num_projectiles=5, max_shots=-1, targets=None, centerx=0,
-            centery=0):
+    def __init__(self, kwargs):
 
-        PSprite.__init__(self)
+        # TODO: Fix writing into kwargs just to read out later in this function
 
-        self.owner = owner
+        if "num_projectiles" not in kwargs:
+            kwargs["num_projectiles"] = 5
+        if "projectile_class" not in kwargs:
+            kwargs["projectile_class"] = None
+        if "max_shots" not in kwargs:
+            kwargs["max_shots"] = -1
+        kwargs["images"] = None
+
+        PSprite.__init__(self, kwargs)
+
+        self.owner = kwargs["owner"]
 
     # If projectile_class is not given, then this Box will be a hollow shell
     #   of its true self (i.e., an empty placeholder)
-        if projectile_class is None:
+        if kwargs["projectile_class"] is None:
             return
 
     # Make sure projectile_class is ok
-        if inspect.isclass(projectile_class) and \
-                issubclass(projectile_class, Projectile) and \
-                projectile_class is not Projectile:
+        if inspect.isclass(kwargs["projectile_class"]) and \
+                issubclass(kwargs["projectile_class"], Projectile) and \
+                kwargs["projectile_class"] is not Projectile:
             # all good
             pass
         else:
             raise TypeError("projectile must be a subclass of Projectile")
 
     # Create Projectiles
-        self.fired_projectiles = fired_projectiles
+        self.fired_projectiles = kwargs["fired_projectiles"]
         self.unused_projectiles = pygame.sprite.RenderPlain()
 
+        p_kwargs = {"owner"     : self,
+                    "platforms" : pygame.sprite.Group(
+                                    kwargs["floors"].sprites(),
+                                    kwargs["ceilings"].sprites()),
+                    "walls"     : pygame.sprite.Group(
+                                    kwargs["l_walls"].sprites(),
+                                    kwargs["r_walls"].sprites()),
+                    "targets"   : kwargs["targets"]}
 
-    # TODO: Horrible hack to get num_projectiles
-        if num_projectiles is None:
-            num_projectiles = projectile_class().max_in_flight
+        # TODO: Ugly way of getting default num_projectiles
+        if kwargs["num_projectiles"] is None:
+            t_p = kwargs["projectile_class"](p_kwargs)
+            kwargs["num_projectiles"] = t_p.max_in_flight
+            self.unused_projectiles.add(t_p)
 
-        for _ in range(num_projectiles):
-            self.unused_projectiles.add(projectile_class(
-                owner=self,
-                platforms=pygame.sprite.RenderPlain(floors.sprites(),
-                    ceilings.sprites()),
-                walls=pygame.sprite.RenderPlain(l_walls.sprites(),
-                    r_walls.sprites()),
-                targets=targets))
+        while len(self.unused_projectiles) < kwargs["num_projectiles"]:
+            self.unused_projectiles.add(kwargs["projectile_class"](p_kwargs))
 
     # Fill in Sprite stuff
         self.image = self.unused_projectiles.sprites()[0].image.copy()
-        self.rect = self.image.get_rect(center=(centerx, centery))
+        self.rect = self.image.get_rect(center=(kwargs["centerx"],
+                                                kwargs["centery"]))
         self._c_rect = self.rect.copy()
 
     # Ammo can be limited
         self._shots_fired = 0
-        if max_shots is None:
-            max_shots = self.unused_projectiles.sprites()[0].shots
-        self._max_shots = max_shots
+        if kwargs["max_shots"] is None:
+            kwargs["max_shots"] = self.unused_projectiles.sprites()[0].shots
+        self._max_shots = kwargs["max_shots"]
 
 
     def fire(self, num):

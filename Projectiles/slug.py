@@ -16,13 +16,25 @@ from Classes.projectile import Projectile
 class Slug(Projectile):
     """
     Quite a strong Projectile. A better BB.
+
+    kwargs must contain:
+        owner
+        platforms
+        walls
+        targets
     """
 
-    def __init__(self, owner=None, platforms=None, walls=None, targets=None):
+    def __init__(self, kwargs):
 
         images = ["Slug.png"]
-        Projectile.__init__(self, owner, images, platforms, walls, speed=4.0,
-            damage=5, targets=targets, max_in_flight=5, shots=10)
+
+        kwargs["images"]        = images
+        kwargs["speed"]         = 4.0
+        kwargs["damage"]        = 5
+        kwargs["max_in_flight"] = 5
+        kwargs["shots"]         = 10
+
+        Projectile.__init__(self, kwargs)
 
 
     def reset(self, centerx, centery, direction):

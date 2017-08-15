@@ -16,18 +16,27 @@ class Heart(PSprite):
     """
     Heart object for collecting and increasing HP.
 
-    @param centerx: X-coordinate
-    @param centery: Y-coordinate
+    kwargs must contain:
+        centerx: X-coordinate
+        centery: Y-coordinate
+        ... and whatever is required by PSprite
     """
 
-    def __init__(self, centerx, centery):
+    def __init__(self, kwargs):
 
         images = ['heart.png']
 
-        PSprite.__init__(self, images)
+        kwargs["images"]   = images
+        kwargs["floors"]   = None
+        kwargs["l_walls"]  = None
+        kwargs["r_walls"]  = None
+        kwargs["ceilings"] = None
+
+        PSprite.__init__(self, kwargs)
 
         self.image = self._images[0]
-        self.rect = self.image.get_rect(center=(centerx, centery))
+        self.rect = self.image.get_rect(center=(kwargs["centerx"],
+                                                kwargs["centery"]))
 
         self.hp = 1
 

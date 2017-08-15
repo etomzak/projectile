@@ -21,47 +21,39 @@ class Player(Character):
 
     Don't instantiate this class; subclass it.
 
-    @param centerx: Player spawn x-coordinate
-    @param centery: Player spawn y-coordinate
-    @param images: Dictionary pointing to the Player's image files
-    @param floors: pygame.sprite.Group of Platforms that the sprite can stand
-                   on
-    @param l_walls: pygame.sprite.Group of Walls that block the sprite moving
-                    right
-    @param r_walls: pygame.sprite.Group of Walls that block the sprite moving
-                    left
-    @param ceilings: pygame.sprite.Group of Platforms that the sprite is stuck
-                     under
-    @param horizontal_speed: Maximum Player speed (pixels per frame)
-    @param horizontal_inertia: Player "weight" (larger is slower acceleration)
-    @param multi_jumps: Max number of consecutive jumps (2 is one mid-air jump)
-    @param vertical_acceleration: How quickly vertical speed changes on a jump
-        (must be >0.0) (smaller values make for longer jumps)
-    @param jump_velocity: Initial speed of jump (must be <0.0) (smaller values
-        make for higher jumps)
-    @param fpi: Frames per image for animation (larger is slower)
-    @param projectile: The Projectile class that this Player uses
-    @param num_projectiles: Maximum number of in-flight Projectiles this
-        Player can have
-    @param targets: pygame.sprite.Group of Baddies this Player could hit
-    @param fired_projectiles: pygame.sprite.Group where fired Projectiles go
-    @param hp: Hit points (strength) of this Player
+    kwargs must contain:
+        floors: pygame.sprite.Group of Platforms that the sprite can stand on
+        l_walls: pygame.sprite.Group of Walls that block the sprite moving
+                 right
+        r_walls: pygame.sprite.Group of Walls that block the sprite moving left
+        ceilings: pygame.sprite.Group of Platforms that the sprite is stuck
+                  under
+        horizontal_speed: Maximum Player speed (pixels per frame)
+        horizontal_inertia: Player "weight" (larger is slower acceleration)
+        multi_jumps: Max number of consecutive jumps (2 is one mid-air jump)
+        vertical_acceleration: How quickly vertical speed changes on a jump
+                               (must be >0.0) (smaller values make for longer
+                               jumps)
+        jump_velocity: Initial speed of jump (must be <0.0) (smaller values
+                       make for higher jumps)
+        fpi: Frames per image for animation (larger is slower)
+        projectile_class: The Projectile class that this Player uses
+        num_projectiles: Maximum number of in-flight Projectiles this Player
+                         can have
+        targets: pygame.sprite.Group of Baddies this Player could hit
+        fired_projectiles: pygame.sprite.Group where fired Projectiles go
+        ... and whatever is required by Character
     """
 
-    def __init__(self, centerx, centery, images, floors=None, l_walls=None,
-        r_walls=None, ceilings=None, horizontal_speed=4.0,
-        horizontal_inertia=8.0, multi_jumps=2, vertical_acceleration=0.4,
-        jump_velocity=-10.0, fpi=4, projectile=None, num_projectiles=10,
-        targets=None, fired_projectiles=None, hp=5):
+    def __init__(self, kwargs):
 
-        Character.__init__(self, centerx, centery, images, floors, l_walls,
-            r_walls, ceilings, hp)
+        Character.__init__(self, kwargs)
 
         self._populate_images()
 
         # TODO: Move animation cycling to PSprite?
         self._walk_ctr = 0 # Walk cycle counter
-        self._fpi = fpi
+        self._fpi = kwargs["fpi"]
 
         self.points = 0
 
@@ -74,11 +66,11 @@ class Player(Character):
         self._floor = None
 
     # Player control characteristics
-        self._max_vx = horizontal_speed
-        self._ix = horizontal_inertia
+        self._max_vx = kwargs["horizontal_speed"]
+        self._ix = kwargs["horizontal_inertia"]
         # _mx: current momentum in x-direction
         self._mx = 0.0
-        self._j_multi = multi_jumps
+        self._j_multi = kwargs["multi_jumps"]
         # _jumps: current number of consecutive jumps without landing
         self._jumps = 0
          # Is SPACE pressed? Don't jump again w/out SPACE being released
@@ -90,8 +82,8 @@ class Player(Character):
         # _j_t == None means that a jump is not in progress
         # _j_o is an offset that ensures that _j_t == 0 is the apogee (useful
         #   for determining speed when falling of floors)
-        self._j_a = vertical_acceleration
-        self._j_b = jump_velocity
+        self._j_a = kwargs["vertical_acceleration"]
+        self._j_b = kwargs["jump_velocity"]
         self._j_t = None
         self._j_o = -self._j_b / self._j_a
         # Vertical point direction ((-1, 0, 1) == (down, forward, up))
@@ -100,37 +92,40 @@ class Player(Character):
         self._point_h = 1
 
     # Make sure control characteristics make sense
-        if horizontal_speed <= 0.0:
+        if self._max_vx <= 0.0:
             raise ValueError("horizontal_speed must be > 0.0")
-        if horizontal_inertia <= 0.0:
+        if self._ix <= 0.0:
             raise ValueError("horizontal_inertia must be > 0.0")
-        if multi_jumps <= 0:
+        if self._j_multi <= 0:
             raise ValueError("multi_jumps must be > 0")
-        if vertical_acceleration <= 0.0:
+        if self._j_a <= 0.0:
             raise ValueError("vertical_acceleration must be > 0.0")
-        if jump_velocity >= 0.0:
+        if self._j_b >= 0.0:
             raise ValueError("jump_velocity must be < 0.0")
 
     # Invincibility after being hit
         self._invincible = 0
 
-    # Set targets 
+    # Set targets
+        targets = kwargs["targets"]
         if targets is None:
             targets = pygame.sprite.RenderPlain()
 
     # Set up default Projectile container
-        self.fired_projectiles = fired_projectiles
-        self._box = ProjectileBox(
-            owner=self,
-            floors = floors,
-            l_walls = l_walls,
-            r_walls = r_walls,
-            ceilings = ceilings,
-            projectile_class = projectile,
-            fired_projectiles = self.fired_projectiles,
-            num_projectiles = num_projectiles,
-            max_shots = -1,
-            targets = targets)
+        self.fired_projectiles = kwargs["fired_projectiles"]
+        b_kwargs = {"owner"             : self,
+                    "floors"            : kwargs["floors"],
+                    "l_walls"           : kwargs["l_walls"],
+                    "r_walls"           : kwargs["r_walls"],
+                    "ceilings"          : kwargs["ceilings"],
+                    "projectile_class"  : kwargs["projectile_class"],
+                    "fired_projectiles" : self.fired_projectiles,
+                    "num_projectiles"   : kwargs["num_projectiles"],
+                    "max_shots"         : -1,
+                    "targets"           : targets,
+                    "centerx"           : 0,
+                    "centery"           : 0}
+        self._box = ProjectileBox(b_kwargs)
 
     # Stack of Boxes
         self._box_stack = []

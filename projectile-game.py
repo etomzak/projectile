@@ -131,15 +131,15 @@ def main():
 
     # The main Player object
     # Game over when a_dude dies
-    a_dude = player_classes[primary_player_classname](
-        centerx           = a_level.player_spawn_x,
-        centery           = a_level.player_spawn_y,
-        floors            = a_level.floors,
-        l_walls           = a_level.l_walls,
-        r_walls           = a_level.r_walls,
-        ceilings          = a_level.ceilings,
-        targets           = a_level.baddies,
-        fired_projectiles = player_projectile_group)
+    p_kwargs = {"centerx"           : a_level.player_spawn_x,
+                "centery"           : a_level.player_spawn_y,
+                "floors"            : a_level.floors,
+                "l_walls"           : a_level.l_walls,
+                "r_walls"           : a_level.r_walls,
+                "ceilings"          : a_level.ceilings,
+                "targets"           : a_level.baddies,
+                "fired_projectiles" : player_projectile_group}
+    a_dude = player_classes[primary_player_classname](p_kwargs)
 
     a_level.set_player(a_dude)
 

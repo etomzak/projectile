@@ -20,62 +20,62 @@ class Baddie(Character):
 
     Don't instantiate this class; subclass it.
 
-    @param owner: The Level object that owns this Baddie
-    @param centerx: Baddie spawn x-coordinate
-    @param centery: Baddie spawn y-coordinate
-    @param images: Dictionary pointing to the Baddie's image files
-    @param floors: pygame.Group of Platforms that the sprite can stand on
-    @param l_walls: pygame.Group of Walls that block the sprite moving right
-    @param r_walls: pygame.Group of Walls that block the sprite moving left
-    @param ceilings: pygame.Group of Platforms that the sprite is stuck under
-    @param fpi: Frames per image for animation (larger is slower)
-    @param projectile: The Projectile class that this Baddie uses
-    @param num_projectiles: Maximum number of in-flight Projectiles this
-        Baddie can have
-    @param fired_projectiles: pygame.Group where fired Projectiles go. owner
-        keeps track of these so they stay in play even if the Baddie dies.
-        Since Projectiles have a reference to their originating Baddie, they
-        effectively keep the Baddie in memory for a short time after the
-        Baddie has died.
-    @param targets: pygame.Group of Players that Projectiles fired by this
-        Baddie might hit
-    @param hp: Hit points (strength) of this Baddie
-    @param points: Point value of hitting this Baddie
+    kwargs must contain:
+        owner: The Level object that owns this Baddie
+        floors: pygame.sprite.Group of Platforms that the sprite can stand on
+        l_walls: pygame.sprite.Group of Walls that block the sprite moving
+                 right
+        r_walls: pygame.sprite.Group of Walls that block the sprite moving left
+        ceilings: pygame.sprite.Group of Platforms that the sprite is stuck
+                  under
+        fpi: Frames per image for animation (larger is slower)
+        projectile_class: The Projectile class that this Baddie uses
+        num_projectiles: Maximum number of in-flight Projectiles this
+                         Baddie can have
+        fired_projectiles: pygame.sprite.Group where fired Projectiles go.
+                           owner keeps track of these so they stay in play even
+                           if the Baddie dies. Since Projectiles have a
+                           reference to their originating Baddie, they
+                           effectively keep the Baddie in memory for a short
+                           time after the Baddie has died.
+        targets: pygame.sprite Group of Players that Projectiles fired by this
+                 Baddie might hit
+        points: Point value of hitting this Baddie
+        ... and whatever is required by Character
     """
 
-    def __init__(self, owner, centerx, centery, images, floors=None,
-        l_walls=None, r_walls=None, ceilings=None, fpi=4, projectile=None,
-        num_projectiles=0, fired_projectiles=None, targets=None, hp=1,
-        points=10):
+    def __init__(self, kwargs):
 
-        Character.__init__(self, centerx, centery, images, floors, l_walls,
-            r_walls, ceilings, hp)
+        Character.__init__(self, kwargs)
 
-        self._owner = owner
-        self.points = points
+        self._owner = kwargs["owner"]
+        self.points = kwargs["points"]
 
         # TODO: Move animation cycling to PSprite?
         self._walk_ctr = 0
-        self._fpi = fpi
+        self._fpi = kwargs["fpi"]
 
     # Set targets
+        targets = kwargs["targets"]
         if targets is None:
             targets = pygame.sprite.RenderPlain()
 
     # Set up Projectiles
         # Use fired_projectiles from owner so Projectiles can outlive the
         #   Baddie
-        self._box = ProjectileBox(
-            owner             = self,
-            floors            = floors,
-            l_walls           = l_walls,
-            r_walls           = r_walls,
-            ceilings          = ceilings,
-            projectile_class  = projectile,
-            fired_projectiles = fired_projectiles,
-            num_projectiles   = num_projectiles,
-            max_shots         = -1,
-            targets           = targets)
+        b_kwargs = {"owner"             : self,
+                    "floors"            : kwargs["floors"],
+                    "l_walls"           : kwargs["l_walls"],
+                    "r_walls"           : kwargs["r_walls"],
+                    "ceilings"          : kwargs["ceilings"],
+                    "projectile_class"  : kwargs["projectile_class"],
+                    "fired_projectiles" : kwargs["fired_projectiles"],
+                    "num_projectiles"   : kwargs["num_projectiles"],
+                    "max_shots"         : -1,
+                    "targets"           : kwargs["targets"],
+                    "centerx"           : 0,
+                    "centery"           : 0}
+        self._box = ProjectileBox(b_kwargs)
 
 
     def got_hit(self, projectile, attacker):

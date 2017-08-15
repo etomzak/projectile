@@ -223,43 +223,44 @@ class Zero(Level):
         # Heart:
         # TODO: Update for multiple types of health boosts
         if sel == 0:
-            pu = self._power_up_dict['health'][0](
-                centerx = self._pu_spawn_x,
-                centery = self._pu_spawn_y)
+            pu_kwargs = {"centerx" : self._pu_spawn_x,
+                         "centery" : self._pu_spawn_y}
+            pu = self._power_up_dict['health'][0](pu_kwargs)
         # Player:
         elif sel == 1:
             length = len(self._power_up_dict['players'])
             if length == 0:
                 return
             i = random.randint(0, length-1)
-            pu = self._power_up_dict['players'][i](
-                centerx = self._pu_spawn_x,
-                centery = self._pu_spawn_y,
-                floors = self.floors,
-                l_walls = self.l_walls,
-                r_walls = self.r_walls,
-                ceilings = self.ceilings,
-                targets = self.baddies,
-                fired_projectiles = self._player_projectile_group)
+            pu_kwargs = {"centerx"           : self._pu_spawn_x,
+                         "centery"           : self._pu_spawn_y,
+                         "floors"            : self.floors,
+                         "l_walls"           : self.l_walls,
+                         "r_walls"           : self.r_walls,
+                         "ceilings"          : self.ceilings,
+                         "targets"           : self.baddies,
+                         "fired_projectiles" : self._player_projectile_group}
+            pu = self._power_up_dict['players'][i](pu_kwargs)
         # Projectile
         else:
             length = len(self._power_up_dict['projectiles'])
             if length == 0:
                 return
             i = random.randint(0, length-1)
-            pu = ProjectileBox(
-                owner=self.player, # NOTE: Updated later
-                floors = self.floors,
-                l_walls = self.l_walls,
-                r_walls = self.r_walls,
-                ceilings = self.ceilings,
-                projectile_class = self._power_up_dict['projectiles'][i],
-                fired_projectiles = self._player_projectile_group,
-                num_projectiles = None,
-                max_shots = None,
-                targets = self.baddies,
-                centerx = self._pu_spawn_x,
-                centery = self._pu_spawn_y)
+            pu_kwargs = {"owner"             : self.player,#NOTE: Updated later
+                         "floors"            : self.floors,
+                         "l_walls"           : self.l_walls,
+                         "r_walls"           : self.r_walls,
+                         "ceilings"          : self.ceilings,
+                         "projectile_class"  : \
+                            self._power_up_dict["projectiles"][i],
+                         "fired_projectiles" : self._player_projectile_group,
+                         "num_projectiles"   : None,
+                         "max_shots"         : None,
+                         "targets"           : self.baddies,
+                         "centerx"           : self._pu_spawn_x,
+                         "centery"           : self._pu_spawn_y}
+            pu = ProjectileBox(pu_kwargs)
 
         self._power_ups.add(pu)
         self._pu_avail = True

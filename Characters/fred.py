@@ -16,10 +16,19 @@ from Projectiles.bb import BB
 class Fred(Player):
     """
     Most basic playable character, Fred.
+
+    kwargs must contain:
+        centerx
+        centery
+        floors
+        l_walls
+        r_walls
+        ceilings
+        targets
+        fired_projectiles
     """
 
-    def __init__(self, centerx, centery, floors=None, l_walls=None,
-        r_walls=None, ceilings=None, targets=None, fired_projectiles=None):
+    def __init__(self, kwargs):
 
         images = {'neutral': 'Fred_neutral.png',
                   'walk': {'right': {'straight': ['Fred_walk_00.png',
@@ -36,18 +45,18 @@ class Fred(Player):
                                     'down': ['Fred_fly_down.png']}},
                   'dead': ['Fred_dead.png']}
 
-        Player.__init__(
-            self,
-            centerx, centery,
-            images,
-            floors, l_walls, r_walls, ceilings,
-            horizontal_speed=4.0, horizontal_inertia=20.0,
-            multi_jumps=2, vertical_acceleration=0.2, jump_velocity=-5.0,
-            fpi=4,
-            projectile=BB, num_projectiles=10,
-            targets=targets,
-            fired_projectiles=fired_projectiles,
-            hp=5)
+        kwargs["images"]                = images
+        kwargs["horizontal_speed"]      = 4.0
+        kwargs["horizontal_inertia"]    = 20.0
+        kwargs["multi_jumps"]           = 2
+        kwargs["vertical_acceleration"] = 0.2
+        kwargs["jump_velocity"]         = -5.0
+        kwargs["fpi"]                   = 4
+        kwargs["projectile_class"]      = BB
+        kwargs["num_projectiles"]       = 10
+        kwargs["hp"]                    = 5
+
+        Player.__init__(self, kwargs)
 
         # Make Fred's collision box a bit narrower than the images
         self._c_rect.width = self.rect.width-6
