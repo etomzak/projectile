@@ -43,7 +43,8 @@ class Fred(Player):
                   'fly': {'right': {'straight': ['Fred_fly.png'],
                                     'up': ['Fred_fly_up.png'],
                                     'down': ['Fred_fly_down.png']}},
-                  'dead': ['Fred_dead.png']}
+                  'dead': ['Fred_dead_00.png', 'Fred_dead_01.png',
+                           'Fred_dead_02.png', 'Fred_dead_03.png']}
 
         kwargs["images"]                = images
         kwargs["horizontal_speed"]      = 4.0

@@ -40,7 +40,8 @@ class Ilmar(Player):
                   'fly': {'right': {'straight': ['Ilmar_fly_straight.png'],
                                     'up': ['Ilmar_fly_up.png'],
                                     'down': ['Ilmar_fly_straight.png']}},
-                  'dead': ['Ilmar_dead.png']}
+                  'dead': ['Ilmar_dead_00.png', 'Ilmar_dead_01.png',
+                           'Ilmar_dead_02.png', 'Ilmar_dead_03.png']}
 
         kwargs["images"]                = images
         kwargs["horizontal_speed"]      = 3.0
