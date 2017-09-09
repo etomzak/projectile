@@ -54,6 +54,7 @@ class Player(Character):
         # TODO: Move animation cycling to PSprite?
         self._walk_ctr = 0 # Walk cycle counter
         self._fpi = kwargs["fpi"]
+        self._prev_image_series = "none" # Name of previous animation
 
         self.points = 0
 
@@ -611,8 +612,18 @@ class Player(Character):
             else:
                 series = series['down']
 
-        self._walk_ctr = (self._walk_ctr + 1) % (len(series) * self._fpi)
+        if series is not self._prev_image_series:
+            self._prev_image_series = series
+            self._walk_ctr = 0
+
         self.image = series[self._walk_ctr // self._fpi]
+
+        # Dying animation freezes on last frame for dramatic effect!!
+        if self.hp <= 0:
+            if len(series) * self._fpi - 1 > self._walk_ctr:
+                self._walk_ctr += 1
+        else:
+            self._walk_ctr = (self._walk_ctr + 1) % (len(series) * self._fpi)
 
 
 if __name__ == '__main__':
