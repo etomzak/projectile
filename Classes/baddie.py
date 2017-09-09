@@ -5,7 +5,7 @@
 # This software comes with ABSOLUTELY NO WARRANTY.
 # See GPLv3.txt for details.
 
-import sys, os, inspect, pygame
+import sys, os, inspect, pygame, math
 from pygame.locals import *
 
 # Add parent directory to path
@@ -55,6 +55,9 @@ class Baddie(Character):
         self._walk_ctr = 0
         self._fpi = kwargs["fpi"]
 
+        # Whether to draw hit decoration
+        self._hit_counter = 0
+
     # Set targets
         targets = kwargs["targets"]
         if targets is None:
@@ -74,8 +77,28 @@ class Baddie(Character):
                     "max_shots"         : -1,
                     "targets"           : kwargs["targets"],
                     "centerx"           : 0,
-                    "centery"           : 0}
+                    "centery"           : 0,
+                    "decoration_list"   : kwargs["decoration_list"]}
         self._box = ProjectileBox(b_kwargs)
+
+    # Decorations
+        # Invincibility
+        r = math.ceil(max(self.rect.width, self.rect.height) * 0.75)
+        self._dec_invinc_surf = \
+            pygame.Surface((r*2, r*2), flags=SRCALPHA).convert_alpha()
+        self._dec_invinc_rect = self._dec_invinc_surf.get_rect()
+        pygame.draw.circle(self._dec_invinc_surf, (255, 0, 0), (r, r), r-1, 0)
+
+
+    def update(self):
+        """
+        Just generic decoration handling.
+        """
+
+        if self._hit_counter > 0:
+            self._hit_counter -= 1
+            if self._hit_counter == 0:
+                self._decoration_list.remove(self)
 
 
     def got_hit(self, projectile, attacker):
@@ -88,6 +111,13 @@ class Baddie(Character):
         self.hp -= projectile.damage
         if self.hp <= 0:
             self._owner.baddie_killed(self)
+            if self._hit_counter > 0:
+                self._decoration_list.remove(self)
+        else:
+            if self._hit_counter == 0:
+                self._decoration_list.append(self)
+            self._hit_counter = 5
+
 
 
     def hit_a_target(self, projectile, target):
@@ -111,6 +141,24 @@ class Baddie(Character):
 
         print("Baddie ProjectileBox should not be empty")
         raise SystemExit
+
+
+    def draw_decoration(self, screen):
+        """
+        Draw a circle around the Baddie to indicate being hit.
+        """
+
+        self._dec_invinc_rect.centerx = self.rect.centerx
+        self._dec_invinc_rect.centery = self.rect.centery
+        screen.blit(self._dec_invinc_surf, self._dec_invinc_rect)
+
+
+    def clear_decoration(self, screen, background):
+        """
+        Clear circle.
+        """
+
+        screen.blit(background, self._dec_invinc_rect, self._dec_invinc_rect)
 
 
 if __name__ == '__main__':

@@ -106,7 +106,7 @@ def main():
         if player != primary_player_classname:
             power_ups['players'].append(player_classes[player])
 
-    # Initialize pygame
+# Initialize pygame
     pygame.init()
     screen = pygame.display.set_mode((640, 480))
     pygame.display.set_caption("Projectile")
@@ -120,13 +120,16 @@ def main():
 
     # All Projectiles fired by all players end up here
     player_projectile_group = pygame.sprite.RenderPlain()
+    # PSprites that want decorations place themselves here
+    decoration_list = []
 
     # The Level object
     # Most everything happens through the Level
     a_level = level_classes["Zero"](
         baddie_classes,
         power_ups,
-        player_projectile_group)
+        player_projectile_group,
+        decoration_list)
     screen.blit(a_level.backdrop, (0, 0))
 
     # The main Player object
@@ -138,7 +141,8 @@ def main():
                 "r_walls"           : a_level.r_walls,
                 "ceilings"          : a_level.ceilings,
                 "targets"           : a_level.baddies,
-                "fired_projectiles" : player_projectile_group}
+                "fired_projectiles" : player_projectile_group,
+                "decoration_list"   : decoration_list}
     a_dude = player_classes[primary_player_classname](p_kwargs)
 
     a_level.set_player(a_dude)

@@ -101,3 +101,12 @@ class Ilmar(Player):
         pass
 
 
+    def reset(self, centerx=None, centery=None):
+        """
+        Ilmar doesn't need to be invincible.
+        """
+
+        Player.reset(self, centerx, centery)
+        self._invincible_counter = 0
+        self._decoration_list.remove(self)
+

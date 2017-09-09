@@ -24,13 +24,14 @@ class Zero(Level):
     @param baddie_classes: A list of available baddies
     @param power_ups: Dictionary of power-ups available to the player
     @param player_projectile_group: Where all Players' fired Projectiles go
+    @param decoration_list: Where PSprites that need decorations go
     """
 
     def __init__(self, baddie_classes, power_ups=None,
-            player_projectile_group=None):
+            player_projectile_group=None, decoration_list=None):
 
         Level.__init__(self, "Level_Zero.png", baddie_classes, power_ups,
-            player_projectile_group)
+            player_projectile_group, decoration_list)
 
         # Use barriers provided by Level class, and add some more
 
@@ -147,6 +148,7 @@ class Zero(Level):
         if len(pu) > 0:
             print("Power-up caught")
             pu = pu[0]
+            pu.disable_box()
             if isinstance(pu, Character):
                 self._push_player(pu)
             elif isinstance(pu, Heart):
@@ -223,8 +225,9 @@ class Zero(Level):
         # Heart:
         # TODO: Update for multiple types of health boosts
         if sel == 0:
-            pu_kwargs = {"centerx" : self._pu_spawn_x,
-                         "centery" : self._pu_spawn_y}
+            pu_kwargs = {"centerx"         : self._pu_spawn_x,
+                         "centery"         : self._pu_spawn_y,
+                         "decoration_list" : self._decoration_list}
             pu = self._power_up_dict['health'][0](pu_kwargs)
         # Player:
         elif sel == 1:
@@ -239,7 +242,8 @@ class Zero(Level):
                          "r_walls"           : self.r_walls,
                          "ceilings"          : self.ceilings,
                          "targets"           : self.baddies,
-                         "fired_projectiles" : self._player_projectile_group}
+                         "fired_projectiles" : self._player_projectile_group,
+                         "decoration_list"   : self._decoration_list}
             pu = self._power_up_dict['players'][i](pu_kwargs)
         # Projectile
         else:
@@ -259,9 +263,11 @@ class Zero(Level):
                          "max_shots"         : None,
                          "targets"           : self.baddies,
                          "centerx"           : self._pu_spawn_x,
-                         "centery"           : self._pu_spawn_y}
+                         "centery"           : self._pu_spawn_y,
+                         "decoration_list"   : self._decoration_list}
             pu = ProjectileBox(pu_kwargs)
 
         self._power_ups.add(pu)
         self._pu_avail = True
+        pu.enable_box()
 

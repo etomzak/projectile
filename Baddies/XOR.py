@@ -63,6 +63,8 @@ class XOR(Baddie):
         Update the location of this XOR.
         """
 
+        Baddie.update(self)
+
         if self._stop_timer != 0:
             self._stop_timer -= 1
             return

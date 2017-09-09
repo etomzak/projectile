@@ -5,7 +5,7 @@
 # This software comes with ABSOLUTELY NO WARRANTY.
 # See GPLv3.txt for details.
 
-import sys, os, inspect, pygame, time
+import sys, os, inspect, pygame, time, math
 from pygame.locals import *
 
 # Add parent directory to path
@@ -103,9 +103,6 @@ class Player(Character):
         if self._j_b >= 0.0:
             raise ValueError("jump_velocity must be < 0.0")
 
-    # Invincibility after being hit
-        self._invincible = 0
-
     # Set targets
         targets = kwargs["targets"]
         if targets is None:
@@ -124,11 +121,29 @@ class Player(Character):
                     "max_shots"         : -1,
                     "targets"           : targets,
                     "centerx"           : 0,
-                    "centery"           : 0}
+                    "centery"           : 0,
+                    "decoration_list"   : kwargs["decoration_list"]}
         self._box = ProjectileBox(b_kwargs)
 
     # Stack of Boxes
         self._box_stack = []
+
+    # Invincibility counter after being hit
+        self._invincible_counter = 0
+
+    # Decorations
+        # Invincibility
+        r = math.ceil(max(self.rect.width, self.rect.height) * 0.75)
+        self._dec_invinc_surf = \
+            pygame.Surface((r*2, r*2), flags=SRCALPHA).convert_alpha()
+        self._dec_invinc_rect = self._dec_invinc_surf.get_rect()
+        pygame.draw.circle(self._dec_invinc_surf, (0, 80, 0), (r, r), r-1, 1)
+        # Got hit
+        self._hit_counter = 0
+        self._dec_hit_surf = \
+            pygame.Surface((r*2, r*2), flags=SRCALPHA).convert_alpha()
+        self._dec_hit_rect = self._dec_invinc_surf.get_rect()
+        pygame.draw.circle(self._dec_hit_surf, (255, 0, 0), (r, r), r-1, 0)
 
 
     def update(self):
@@ -194,8 +209,14 @@ class Player(Character):
         self._update_image()
 
         # Update invincibility
-        if self._invincible > 0:
-            self._invincible -= 1
+        if self._invincible_counter > 0:
+            self._invincible_counter -= 1
+            if self._invincible_counter == 0:
+                self._decoration_list.remove(self)
+
+        # Hit counter (for hit decoration)
+        if self._hit_counter > 0:
+            self._hit_counter -= 1
 
 
     def hit_a_target(self, projectile, target):
@@ -220,16 +241,22 @@ class Player(Character):
             return
 
         # If invincible, don't get hurt
-        if self._invincible > 0:
+        if self._invincible_counter > 0:
             return
 
         print("Character hit")
 
         self.hp -= projectile.damage
-        self._invincible = 45
+        self._invincible_counter = 60
+        self._hit_counter = 5
         if self.hp <= 0:
             print("Character died")
-            pass
+            # The following can only happen if something can damage an
+            #   invincible Player
+            #if self._invincible_counter > 0:
+            #    self._decoration_list.remove(self)
+        else:
+            self._decoration_list.append(self)
 
 
     def hurt(self, hp):
@@ -244,8 +271,12 @@ class Player(Character):
 
         print("Character hurt")
 
+        if self._invincible_counter == 0:
+            self._decoration_list.append(self)
+
         self.hp -= hp
-        self._invincible = 45
+        self._invincible_counter = 60
+        self._hit_counter = 5
         if self.hp <= 0:
             print("Character died")
             pass
@@ -264,7 +295,8 @@ class Player(Character):
             self._c_rect.centery = centery
         self._mx = 0.0
         self._j_t = None
-        self._invincible = 60
+        self._invincible_counter = 60
+        self._decoration_list.append(self)
 
 
     def push_box(self, box):
@@ -329,6 +361,38 @@ class Player(Character):
 
         pr.reset(centerx = self.rect.centerx, centery = self.rect.centery,
             direction=direction)
+
+
+    def draw_decoration(self, screen):
+        """
+        Draw a circle around the Player to indicate being hit.
+        """
+
+        if self._hit_counter > 0:
+            self._dec_hit_rect.centerx = self.rect.centerx
+            self._dec_hit_rect.centery = self.rect.centery
+            screen.blit(self._dec_hit_surf, self._dec_hit_rect)
+        elif self._invincible_counter > 0:
+            self._dec_invinc_rect.centerx = self.rect.centerx
+            self._dec_invinc_rect.centery = self.rect.centery
+            screen.blit(self._dec_invinc_surf, self._dec_invinc_rect)
+        else:
+            Character.draw_decoration(self, screen)
+
+
+    def clear_decoration(self, screen, background):
+        """
+        Clear circle.
+        """
+
+        if self._hit_counter > 0:
+            screen.blit(background, self._dec_hit_rect, self._dec_hit_rect)
+        elif self._invincible_counter > 0:
+            screen.blit(background, self._dec_invinc_rect,
+                self._dec_invinc_rect)
+        else:
+            Character.clear_decoration(self, screen, background)
+
 
 
     def _get_movement(self, mx):

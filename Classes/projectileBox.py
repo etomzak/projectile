@@ -75,14 +75,15 @@ class ProjectileBox(PSprite):
         self.fired_projectiles = kwargs["fired_projectiles"]
         self.unused_projectiles = pygame.sprite.RenderPlain()
 
-        p_kwargs = {"owner"     : self,
-                    "platforms" : pygame.sprite.Group(
-                                    kwargs["floors"].sprites(),
-                                    kwargs["ceilings"].sprites()),
-                    "walls"     : pygame.sprite.Group(
-                                    kwargs["l_walls"].sprites(),
-                                    kwargs["r_walls"].sprites()),
-                    "targets"   : kwargs["targets"]}
+        p_kwargs = {"owner"           : self,
+                    "platforms"       : pygame.sprite.Group(
+                                          kwargs["floors"].sprites(),
+                                          kwargs["ceilings"].sprites()),
+                    "walls"           : pygame.sprite.Group(
+                                          kwargs["l_walls"].sprites(),
+                                          kwargs["r_walls"].sprites()),
+                    "targets"         : kwargs["targets"],
+                    "decoration_list" : kwargs["decoration_list"]}
 
         # TODO: Ugly way of getting default num_projectiles
         if kwargs["num_projectiles"] is None:

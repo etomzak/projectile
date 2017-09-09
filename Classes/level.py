@@ -13,8 +13,6 @@ sys.path.append(os.path.dirname(os.path.split(os.path.abspath(__file__))[0]))
 
 from Classes.wall import Wall
 from Classes.platform import Platform
-from Classes.baddie import Baddie
-from Baddies.kreutzwald import Kreutzwald
 
 class Level():
     """"
@@ -26,6 +24,7 @@ class Level():
     @param baddie_classes: List of available Baddies
     @param power_ups: Dictionary of power-ups available to the player
     @param player_projectile_group: Where all Players' fired Projectiles go
+    @param decoration_list: Where PSprites that need decorations go
 
     Barrier attributes:
     floors: prevent characters from moving down; are of type Platform
@@ -46,7 +45,7 @@ class Level():
     """
 
     def __init__(self, backdrop, baddie_classes, power_ups=None,
-            player_projectile_group=None):
+            player_projectile_group=None, decoration_list=None):
 
     # Set up backdrop
         class_path = os.path.split(os.path.abspath(__file__))[0]
@@ -77,6 +76,8 @@ class Level():
         self._player_stack = []
     # Group where all Player-fired Projectiles go
         self._player_projectile_group = player_projectile_group
+    # Group where all sprite decorations go
+        self._decoration_list = decoration_list
 
     # Default player spawn point
         self.player_spawn_x = 10
@@ -108,7 +109,6 @@ class Level():
         self.baddie_projectiles.update()
         self._player_group.update()
         self._player_projectile_group.update()
-        # NOTE: _power_ups don't need updating
         if (self.player.dead):
             if len(self._player_stack) > 0:
                 centerx = self.player.rect.centerx
@@ -130,11 +130,8 @@ class Level():
         self.baddie_projectiles.clear(screen, self.backdrop)
         self._player_group.clear(screen, self.backdrop)
         self._player_projectile_group.clear(screen, self.backdrop)
-        # NOTE: _power_ups don't need clearing because they don't move
-        # power-up boxes do need clearing because they're outside of 
-        #   power-up rects
-        for p in self._power_ups:
-            p.clear_box(screen, self.backdrop)
+        for s in self._decoration_list:
+            s.clear_decoration(screen, self.backdrop)
 
 
     def draw(self, screen):
@@ -142,11 +139,11 @@ class Level():
         Draw stuff.
         """
 
+        for s in self._decoration_list:
+            s.draw_decoration(screen)
         self.baddies.draw(screen)
         self.baddie_projectiles.draw(screen)
         self._power_ups.draw(screen)
-        for p in self._power_ups:
-            p.draw_box(screen)
         self._player_group.draw(screen)
         self._player_projectile_group.draw(screen)
 
@@ -251,7 +248,8 @@ class Level():
                   "r_walls"           : self.r_walls,
                   "ceilings"          : self.ceilings,
                   "fired_projectiles" : self.baddie_projectiles,
-                  "targets"           : self._player_group}
+                  "targets"           : self._player_group,
+                  "decoration_list"   : self._decoration_list}
 
         self.baddies.add(self._baddie_classes[baddie](kwargs))
 

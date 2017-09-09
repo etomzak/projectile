@@ -8,9 +8,6 @@
 import sys, os, inspect, pygame
 from pygame.locals import *
 
-# Add parent directory to path
-sys.path.append(os.path.dirname(os.path.split(os.path.abspath(__file__))[0]))
-
 class PSprite(pygame.sprite.Sprite):
     """
     Base class for all sprites in the game.
@@ -23,6 +20,7 @@ class PSprite(pygame.sprite.Sprite):
         l_walls: pygame.Group of Walls that block the sprite moving right
         r_walls: pygame.Group of Walls that block the sprite moving left
         ceilings: pygame.Group of Platforms that the sprite is stuck under
+        decoration_list: list where any decorations go
     """
 
     def __init__(self, kwargs):
@@ -48,6 +46,7 @@ class PSprite(pygame.sprite.Sprite):
         self.l_walls = kwargs["l_walls"]
         self.r_walls = kwargs["r_walls"]
         self.ceilings = kwargs["ceilings"]
+        self._decoration_list = kwargs["decoration_list"]
 
     # If barriers (platforms and walls) not given, set to empty
         if self.floors is None:
@@ -180,21 +179,48 @@ class PSprite(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
 
 
-    def draw_box(self, screen):
+    def enable_box(self):
         """
-        Draw a box around the current image.
-        """
+        Turn on black box around PSprite (e.g., when PSprite is a power-up).
 
-        pygame.draw.rect(screen, (0, 0, 0), self.rect.inflate(4, 4), 1)
-
-
-    def clear_box(self, screen, background):
-        """
-        Clear the box around the Character (see draw_box()).
+        Not done in __init__ because the size of the sprite is not yet
+        available there.
         """
 
         t_rect = self.rect.inflate(4, 4)
-        screen.blit(background, t_rect, t_rect)
+        self._dec_box_surf = pygame.Surface((t_rect.width, t_rect.height),
+                                flags=SRCALPHA).convert_alpha()
+        self._dec_box_rect = self._dec_box_surf.get_rect()
+        pygame.draw.rect(self._dec_box_surf, (0, 0, 0),
+            pygame.Rect(0, 0, t_rect.width, t_rect.height), 1)
+
+        self._decoration_list.append(self)
+
+
+    def disable_box(self):
+        """
+        Turn box off.
+        """
+
+        self._decoration_list.remove(self)
+
+
+    def draw_decoration(self, screen):
+        """
+        Draw this sprite's box.
+        """
+
+        self._dec_box_rect.centerx = self.rect.centerx
+        self._dec_box_rect.centery = self.rect.centery
+        screen.blit(self._dec_box_surf, self._dec_box_rect)
+
+
+    def clear_decoration(self, screen, background):
+        """
+        Clear box.
+        """
+
+        screen.blit(background, self._dec_box_rect, self._dec_box_rect)
 
 
 if __name__ == '__main__':
