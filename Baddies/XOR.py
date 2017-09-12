@@ -31,7 +31,13 @@ class XOR(Baddie):
 
     def __init__(self, kwargs):
 
-        images = {'neutral': 'XOR.png'}
+        images = {'neutral': 'XOR_move_00.png',
+                  'move' : ['XOR_move_00.png', 'XOR_move_01.png',
+                            'XOR_move_02.png', 'XOR_move_03.png',
+                            'XOR_move_03.png', 'XOR_move_02.png',
+                            'XOR_move_01.png', 'XOR_move_00.png'],
+                  'dead' : ['XOR_dead_00.png', 'XOR_dead_01.png',
+                            'XOR_dead_02.png', 'XOR_dead_02.png']}
 
         kwargs["images"]           = images
         kwargs["fpi"]              = 4
@@ -64,6 +70,10 @@ class XOR(Baddie):
         """
 
         Baddie.update(self)
+
+        # If inactive (i.e., dying), don't do anything
+        if not self.active:
+            return
 
         if self._stop_timer != 0:
             self._stop_timer -= 1

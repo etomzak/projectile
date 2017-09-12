@@ -30,7 +30,13 @@ class Kreutzwald(Baddie):
 
     def __init__(self, kwargs):
 
-        images = {'neutral': 'Kreutzwald.png'}
+        images = {'neutral': 'Kreutzwald_move_00.png',
+                  'move' : ['Kreutzwald_move_00.png', 'Kreutzwald_move_01.png',
+                            'Kreutzwald_move_02.png', 'Kreutzwald_move_02.png',
+                            'Kreutzwald_move_01.png', 'Kreutzwald_move_00.png'
+                            ],
+                  'dead' : ['Kreutzwald_dead_00.png', 'Kreutzwald_dead_01.png']
+                            }
 
         kwargs["images"]           = images
         kwargs["fpi"]              = 4
@@ -57,6 +63,12 @@ class Kreutzwald(Baddie):
         """
         Update the location of this Kreutzwald.
         """
+
+        Baddie.update(self)
+
+        # If inactive (i.e., dying), don't do anything
+        if not self.active:
+            return
 
         dxf = math.cos(self._dir) * self._speed
         dxy = math.sin(self._dir) * self._speed

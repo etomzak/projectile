@@ -47,7 +47,7 @@ class Character(PSprite):
         self.hp = kwargs["hp"]
         self._max_hp = kwargs["hp"]
 
-    # If this Character is currently active (hit-able, moveable, visible)
+    # If this Character is currently active (hit-able, moveable, maybe visible)
         self.active = True
 
 

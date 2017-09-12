@@ -48,15 +48,21 @@ class Baddie(Character):
 
         Character.__init__(self, kwargs)
 
+        self._populate_images()
+
         self._owner = kwargs["owner"]
         self.points = kwargs["points"]
 
         # TODO: Move animation cycling to PSprite?
         self._walk_ctr = 0
         self._fpi = kwargs["fpi"]
+        self._prev_image_series = "none"
 
         # Whether to draw hit decoration
         self._hit_counter = 0
+
+        # Number of frames to display dead animation
+        self._dead_ctr = 30
 
     # Set targets
         targets = kwargs["targets"]
@@ -100,6 +106,13 @@ class Baddie(Character):
             if self._hit_counter == 0:
                 self._decoration_list.remove(self)
 
+        if self.hp <= 0:
+            self._dead_ctr -= 1
+            if self._dead_ctr == 0:
+                self._owner.baddie_killed(self)
+
+        self._update_image()
+
 
     def got_hit(self, projectile, attacker):
         """
@@ -108,16 +121,18 @@ class Baddie(Character):
         Called by a Projectile.
         """
 
-        self.hp -= projectile.damage
+        # If already dying
         if self.hp <= 0:
-            self._owner.baddie_killed(self)
-            if self._hit_counter > 0:
-                self._decoration_list.remove(self)
+            return
+
+        self.hp -= projectile.damage
+
+        if self.hp <= 0:
+            self.active = False
         else:
             if self._hit_counter == 0:
                 self._decoration_list.append(self)
             self._hit_counter = 5
-
 
 
     def hit_a_target(self, projectile, target):
@@ -159,6 +174,43 @@ class Baddie(Character):
         """
 
         screen.blit(background, self._dec_invinc_rect, self._dec_invinc_rect)
+
+
+    def _populate_images(self):
+        """
+        Populate missing fields in self._images.
+
+        Character requires that at least images['neutral'] exists. This method
+        fills in the rest for Baddie.
+        """
+
+        for s in ["move", "dead"]:
+            if s not in self._images:
+                self._images[s] = [self._images["neutral"]]
+
+
+    def _update_image(self):
+        """
+        Update image.
+        """
+
+        if self.active:
+            series = self._images['move']
+        else:
+            series = self._images['dead']
+
+        if series is not self._prev_image_series:
+            self._prev_image_series = series
+            self._walk_ctr = 0
+
+        self.image = series[self._walk_ctr // self._fpi]
+
+        if self.hp <= 0:
+            if len(series) * self._fpi - 1 > self._walk_ctr:
+                self._walk_ctr += 1
+        else:
+            self._walk_ctr = (self._walk_ctr + 1) % \
+                                (len(self._images['move']) * self._fpi)
 
 
 if __name__ == '__main__':

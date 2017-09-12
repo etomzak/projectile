@@ -145,7 +145,7 @@ class Projectile(PSprite):
         # Hit first active target
         if len(targets) != 0:
             for target in targets:
-                if target.active: # TODO: Active test shouldn't be necessary
+                if target.active:
                     target.got_hit(self, self._owner)
                     self._owner.hit_a_target(self, target)
                     self.has_collided = True
