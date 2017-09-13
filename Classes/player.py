@@ -155,6 +155,18 @@ class Player(Character):
         if not self.active:
             return
 
+        # Update invincibility
+        if self._invincible_counter > 0:
+            self._invincible_counter -= 1
+            if self._invincible_counter == 0:
+                self._decoration_list.remove(self)
+
+        # Hit counter (for hit decoration)
+        if self._hit_counter > 0:
+            self._hit_counter -= 1
+            if self._hit_counter == 0 and self._invincible_counter == 0:
+                self._decoration_list.remove(self)
+
         # If Player is dying, don't do anything else
         if self.hp <= 0 and not self.dead:
             self._dead_ctr -= 1
@@ -209,16 +221,6 @@ class Player(Character):
         # Update sprite image
         self._update_image()
 
-        # Update invincibility
-        if self._invincible_counter > 0:
-            self._invincible_counter -= 1
-            if self._invincible_counter == 0:
-                self._decoration_list.remove(self)
-
-        # Hit counter (for hit decoration)
-        if self._hit_counter > 0:
-            self._hit_counter -= 1
-
 
     def hit_a_target(self, projectile, target):
         """
@@ -247,9 +249,12 @@ class Player(Character):
 
         print("Character hit")
 
+        if self._hit_counter == 0:
+            self._decoration_list.append(self)
+
         self.hp -= projectile.damage
-        self._invincible_counter = 60
         self._hit_counter = 5
+
         if self.hp <= 0:
             print("Character died")
             # The following can only happen if something can damage an
@@ -257,7 +262,7 @@ class Player(Character):
             #if self._invincible_counter > 0:
             #    self._decoration_list.remove(self)
         else:
-            self._decoration_list.append(self)
+            self._invincible_counter = 60
 
 
     def hurt(self, hp):
@@ -272,15 +277,15 @@ class Player(Character):
 
         print("Character hurt")
 
-        if self._invincible_counter == 0:
-            self._decoration_list.append(self)
-
         self.hp -= hp
-        self._invincible_counter = 60
+        if self._invincible_counter == 0 and self._hit_counter == 0:
+            self._decoration_list.append(self)
         self._hit_counter = 5
+
         if self.hp <= 0:
             print("Character died")
-            pass
+        else:
+            self._invincible_counter = 60
 
 
     def reset(self, centerx=None, centery=None):
@@ -394,6 +399,27 @@ class Player(Character):
         else:
             Character.clear_decoration(self, screen, background)
 
+
+    def activate(self):
+        """
+        Bookkeeping to make Player active.
+        """
+        # TODO: Move this method to Character?
+
+        self.active = True
+
+
+    def deactivate(self):
+        """
+        Bookkeeping to make Player inactive.
+        """
+        # TODO: Move this method to Character?
+
+        self.active = False
+        if self._hit_counter > 0 or self._invincible_counter > 0:
+            self._decoration_list.remove(self)
+            self._hit_counter = 0
+            self._invincible_counter = 0
 
 
     def _get_movement(self, mx):

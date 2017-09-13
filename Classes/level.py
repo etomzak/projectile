@@ -209,7 +209,7 @@ class Level():
         """
 
         t_plr = self.player
-        t_plr.active = False
+        t_plr.deactivate()
         plr.points = t_plr.points
         self._player_group.remove(t_plr)
         self._player_stack.append(t_plr)
@@ -224,10 +224,10 @@ class Level():
 
         a_plr = self.player
         self._player_group.remove(a_plr)
-        a_plr.active = False
+        a_plr.deactivate()
         b_plr = self._player_stack.pop()
         b_plr.points = a_plr.points
-        b_plr.active = True
+        b_plr.activate()
         self._player_group.add(b_plr)
         self.player = b_plr
 

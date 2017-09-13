@@ -218,8 +218,6 @@ class Zero(Level):
         if len(self._power_ups) > 1:
             return
 
-        print("Power-up appeared")
-
         sel = random.randint(0, 2)
 
         # Heart:
@@ -266,6 +264,8 @@ class Zero(Level):
                          "centery"           : self._pu_spawn_y,
                          "decoration_list"   : self._decoration_list}
             pu = ProjectileBox(pu_kwargs)
+
+        print("Power-up appeared")
 
         self._power_ups.add(pu)
         self._pu_avail = True
