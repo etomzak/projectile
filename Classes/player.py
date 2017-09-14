@@ -247,6 +247,10 @@ class Player(Character):
         if self._invincible_counter > 0:
             return
 
+        # If already dead
+        if self.hp <= 0:
+            return
+
         print("Character hit")
 
         if self._hit_counter == 0:
