@@ -20,27 +20,69 @@ $> /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/ins
 $> brew update
 ```
 
-Then install python3:
+Then, install python3:
 
 ```
 $> brew install python3
 ```
 
-Then use pip to install pygame:
+Then, use pip to install pygame:
 
 ```
 $> pip3 install pygame
 ```
 
-### Getting Projectile
+### Getting pygame on Windows
+
+These instructions are for Windows 7.
+They might also work for later versions of Windows.
+
+Windows doesn't have python3 by default.
+Download the installer for the latest version of Python 3.6 from [here](https://www.python.org/downloads/).
+
+Then, run the installer.
+Make sure to check the "Add Python 3.6 to PATH" box, and click "Install Now."
+See [Python documentation](https://docs.python.org/3/using/windows.html#installation-steps) for more details.
+
+When Python has finished installing, click on the Start Menu, type `cmd.exe`, and hit `[enter]`.
+This opens a terminal.
+To install pygame, type
+
+```
+py -m pip install pygame --user
+```
+
+and hit `[enter]`.
+
+You can check that it worked by running the Aliens game included with pygame:
+
+```
+py -m pygame.examples.aliens
+```
+
+See also [pygame documentation](http://pygame.org/wiki/GettingStarted#Windows%20installation).
+
+### Getting Projectile on Linux and MacOS
 
 Clone the game's repository to a suitable location:
 
 ```
-git clone https://github.com/etomzak/projectile.git projectile_trunk
+$> git clone https://github.com/etomzak/projectile.git projectile_trunk
 ```
 
+### Getting Projectile on Windows
+
+At the top of the [Projectile project page](https://github.com/etomzak/projectile) (probably the same page that you're reading this text on), click "Clone or download," then "Download ZIP."
+It will download a file named `projectile-master.zip`.
+
+Once it's finished downloading, open your Downloads folder.
+Right-click on `projectile-master.zip`, and click "Extract all..."
+Choose where to extract the game to with "Browse."
+It doesn't really matter where you put it as long as you can find it.
+
 ## Running the game
+
+### On Linux and MacOS
 
 From a terminal:
 
@@ -54,6 +96,16 @@ A short help page is available with
 ```
 $> ./projectile-game.py -h
 ```
+
+### On Windows
+
+Navigate to the folder where you extracted `projectile-master.zip`.
+Then, open the folder `projectile-master`.
+There is another folder in there named `projectile-master`.
+Open that one as well.
+
+Then, find the file named `projectile-game.py` (or just `projectile-game`).
+Double-click it to start the game.
 
 ## Playing the game
 
@@ -93,8 +145,8 @@ Currently there is one level and two each of players, baddies, and projectiles.
 
 | Baddie | Description |
 |--------|-------------|
-| ![Kreutzwald](Images/Kreutzwald.png) | **Kreutzwald** is an angry-looking balloon, but he can't actually hurt you. He has 1 health and is worth 5 points. |
-| ![XOR](Images/XOR.png) | **XOR** is an aggressive machine thing that shoots BBs at you as it flies around. It has a small attack surface and is difficult to hit. It has 3 health and is worth 20 points. |
+| ![Kreutzwald](Images/Kreutzwald_move_00.png) | **Kreutzwald** is an angry-looking balloon, but he can't actually hurt you. He has 1 health and is worth 5 points. |
+| ![XOR](Images/XOR_move_00.png) | **XOR** is an aggressive machine thing that shoots BBs at you as it flies around. It has a small attack surface and is difficult to hit. It has 3 health and is worth 20 points. |
 
 #### Projectiles
 
