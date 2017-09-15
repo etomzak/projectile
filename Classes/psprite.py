@@ -105,11 +105,18 @@ class PSprite(pygame.sprite.Sprite):
         (dx+ddx, dy+ddy) will take the sprite to the edge of any obstacles.
         obsx and obsy are the obstacles the sprite has collided with in the X
         and Y directions.
+
+        The function rounds dx and dy to integers.
         """
         # TODO: This function works fine for sprites that aren't moving
         #       diagonally, or sprites that are moving diagonally and not too
         #       fast. If a sprite is moving both diagonally and fast, it might
         #       teleport through an obstacle.
+
+        if isinstance(dx, float):
+            dx = round(dx)
+        if isinstance(dy, float):
+            dy = round(dy)
 
         ddx = 0
         ddy = 0

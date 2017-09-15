@@ -53,6 +53,17 @@ class Baddie(Character):
         self._owner = kwargs["owner"]
         self.points = kwargs["points"]
 
+    # Location and default movement characteristics
+        # True x- and y-coordinates are calculated and stored in floats to
+        #   allow for sub-pixel motion, but collision detection, drawing, etc.
+        #   are done on integers
+        self._xf = float(self.rect.centerx)
+        self._yf = float(self.rect.centery)
+        # Useful for Baddies that just float and bounce around
+        self._speed = 1.0
+        self._dir = 0.0
+
+    # Animation-related variables
         # TODO: Move animation cycling to PSprite?
         self._walk_ctr = 0
         self._fpi = kwargs["fpi"]
@@ -211,6 +222,35 @@ class Baddie(Character):
         else:
             self._walk_ctr = (self._walk_ctr + 1) % \
                                 (len(self._images['move']) * self._fpi)
+
+
+    def _get_movement(self):
+        """
+        Calculate change to x and y given current speed and trajectory.
+
+        I.e., return dxf and dyf using _speed and _dir. Returned values are
+        floats.
+        """
+
+        return (math.cos(self._dir) * self._speed,
+                math.sin(self._dir) * self._speed)
+
+
+    def _move(self, dxf, dxy):
+        """
+        Do all the bookkeeping to move this Baddie.
+
+        Updates rect, _c_rect, _xf, _xy. No collision detection is performed.
+        """
+
+        self._xf += dxf
+        self._yf += dxy
+
+        self.rect.centerx = round(self._xf)
+        self.rect.centery = round(self._yf)
+
+        self._c_rect.centerx = self.rect.centerx
+        self._c_rect.centery = self.rect.centery
 
 
 if __name__ == '__main__':

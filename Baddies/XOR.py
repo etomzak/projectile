@@ -55,7 +55,7 @@ class XOR(Baddie):
     # Movement characteristics
         self._speed = 1
         # XOR only moves left, right, up, or down
-        self._dir = random.randint(0, 3) * 90
+        self._dir = math.radians(random.randint(0, 3) * 90)
         # When XOR hits a barrier, it stops for a bit and doesn't fire
         self._stop_timer = 0
 
@@ -91,33 +91,23 @@ class XOR(Baddie):
         if self._firing and self._box.avail_projectiles() < 4:
             self._firing = False
 
-        dx = 0
-        dy = 0
+        (dxf, dyf) = self._get_movement()
 
-        if self._dir == 0:
-            dx = self._speed
-        elif self._dir == 90:
-            dy = self._speed
-        elif self._dir == 180:
-            dx = -self._speed
-        else:
-            dy = -self._speed
+        # Check for collisions with obstacles. Don't care which obstacles were
+        #   hit.
+        # dxf and dxy values passed to collision detection have the drift
+        #   between the FP center and int center added to prevent Baddies from
+        #   slowly passing through barriers
+        ddx, ddy, _, _ = self._basic_obstacle_collision(
+            dxf + self._xf - self.rect.centerx,
+            dyf + self._yf - self.rect.centery)
 
-        ddx, ddy, _, _ = self._basic_obstacle_collision(dx, dy)
+        self._move(dxf + ddx, dyf + ddy)
 
-        # No collision
-        if ddx == 0 and ddy == 0:
-            self.rect.centerx += dx
-            self.rect.centery += dy
-        # Collision: Move to obstacle and pick new direction
-        else:
-            self.rect.centerx = self.rect.centerx + dx + ddx
-            self.rect.centery = self.rect.centery + dy + ddy
-            self._dir = random.randint(0, 3) * 90
+        # If collision detected
+        if ddx != 0 or ddy != 0:
+            self._dir = math.radians(random.randint(0, 3) * 90)
             self._stop_timer = 60
-
-        self._c_rect.centerx = self.rect.centerx
-        self._c_rect.centery = self.rect.centery
 
 
     def _fire(self):

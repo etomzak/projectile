@@ -48,16 +48,9 @@ class Kreutzwald(Baddie):
         Baddie.__init__(self, kwargs)
 
     # Movement characteristics
-        # Kreutzwald is so slow-moving that its location is internally stored
-        #   as floats. Otherwise, it could get stuck due to rounding errrors.
-        # TODO: Double-check above assertion, esp. ceil() and floor() in
-        #       update().
-        self._speed = 1.0                   # Absolute velocity
+        self._speed = 1.0                   # Absolute speed
         self._dir = math.radians(random.randint(0, 359))
                                             # Direction of movement (degrees)
-        self._xf = float(kwargs["centerx"]) # x-coordinate as float
-        self._yf = float(kwargs["centery"]) # y-coordinate as float
-
 
     def update(self):
         """
@@ -70,36 +63,21 @@ class Kreutzwald(Baddie):
         if not self.active:
             return
 
-        dxf = math.cos(self._dir) * self._speed
-        dxy = math.sin(self._dir) * self._speed
+        (dxf, dyf) = self._get_movement()
 
-        if dxf >= 0:
-            dx = int(math.ceil(dxf))
-        else:
-            dx = int(math.floor(dxf))
-        if dxy >= 0:
-            dy = int(math.ceil(dxy))
-        else:
-            dy = int(math.floor(dxy))
 
         # Check for collisions with obstacles. Don't care which obstacles were
         #   hit.
-        ddx, ddy, _, _ = self._basic_obstacle_collision(dx, dy)
+        # dxf and dxy values passed to collision detection have the drift
+        #   between the FP center and int center added to prevent Baddies from
+        #   slowly passing through barriers
+        ddx, ddy, _, _ = self._basic_obstacle_collision(
+            dxf + self._xf - self.rect.centerx,
+            dyf + self._yf - self.rect.centery)
 
-        # No collision
-        if ddx == 0 and ddy == 0:
-            self._xf = self._xf + dxf
-            self._yf = self._yf + dxy
-            self.rect.centerx = round(self._xf)
-            self.rect.centery = round(self._yf)
-        # Collision: Move to obstacle and pick new direction
-        else:
-            self.rect.centerx = self.rect.centerx + dx + ddx
-            self.rect.centery = self.rect.centery + dy + ddy
-            self._xf = float(self.rect.centerx)
-            self._yf = float(self.rect.centery)
+        self._move(dxf + ddx, dyf + ddy)
+
+        # If collision detected
+        if ddx != 0 or ddy != 0:
             self._dir = math.radians(random.randint(0, 359))
-
-        self._c_rect.centerx = self.rect.centerx
-        self._c_rect.centery = self.rect.centery
 
