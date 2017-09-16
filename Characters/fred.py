@@ -55,7 +55,7 @@ class Fred(Player):
         kwargs["fpi"]                   = 4
         kwargs["projectile_class"]      = BB
         kwargs["num_projectiles"]       = 10
-        kwargs["hp"]                    = 5
+        kwargs["hp"]                    = 20
 
         Player.__init__(self, kwargs)
 

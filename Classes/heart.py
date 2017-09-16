@@ -24,7 +24,7 @@ class Heart(PSprite):
 
     def __init__(self, kwargs):
 
-        images = ['heart.png']
+        images = ['heart_4.png']
 
         kwargs["images"]   = images
         kwargs["floors"]   = None
@@ -38,7 +38,7 @@ class Heart(PSprite):
         self.rect = self.image.get_rect(center=(kwargs["centerx"],
                                                 kwargs["centery"]))
 
-        self.hp = 1
+        self.hp = 4
 
 
 if __name__ == '__main__':

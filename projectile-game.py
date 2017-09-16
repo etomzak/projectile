@@ -160,14 +160,19 @@ def main():
 
 # Health display
     health = a_dude.hp
-    try:
-        heart = pygame.image.load(os.path.join(GAME_DIR, "Images",
-            "heart.png"))
-    except pygame.error:
-        print("Cannot load heart.png")
-        raise SystemExit
-    heart = heart.convert_alpha()
-    heart_rect = heart.get_rect()
+
+    hearts = []
+
+    for name in ["heart_1.png", "heart_2.png", "heart_3.png", "heart_4.png"]:
+        try:
+            heart = pygame.image.load(os.path.join(GAME_DIR, "Images", name))
+        except pygame.error:
+            print("Cannot load", name)
+            raise SystemExit
+        heart = heart.convert_alpha()
+        hearts.append(heart)
+
+    heart_rect = hearts[3].get_rect()
     heart_area = Rect(3, 2, 90, 15)
 
     pygame.display.flip()
@@ -251,8 +256,17 @@ def main():
                 screen.blit(fps_text, fps_rect)
 
     # Draw health
-        for i in range(health):
-            screen.blit(heart, (i*18+3, 2))
+        full_hearts = health // 4
+        frac_hearts = health % 4
+
+        for i in range(full_hearts):
+            screen.blit(hearts[3], (i*18+3, 2))
+        if frac_hearts == 1:
+            screen.blit(hearts[0], (full_hearts*18+3, 2))
+        elif frac_hearts == 2:
+            screen.blit(hearts[1], (full_hearts*18+3, 2))
+        elif frac_hearts == 3:
+            screen.blit(hearts[2], (full_hearts*18+3, 2))
 
     # Draw everything else
         a_level.draw(screen)
