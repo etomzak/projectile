@@ -42,6 +42,7 @@ class Character(PSprite):
 
         self.rect.centerx = kwargs["centerx"]
         self.rect.centery = kwargs["centery"]
+        # TODO: _c_rect maybe not best name since now accessed by Level
         self._c_rect = self.rect.copy()
 
         self.hp = kwargs["hp"]

@@ -113,10 +113,11 @@ class Level():
             if len(self._player_stack) > 0:
                 centerx = self.player.rect.centerx
                 centery = self.player.rect.centery
+                bottom = self.player._c_rect.bottom
                 # NOTE: If a Projectile fired by a Player hits a baddie after
                 #       death, the points won't be counted
                 self._pop_player()
-                self.player.reset(centerx, centery)
+                self.player.reset(centerx, centery, bottom)
             else:
                 self.dead = True
 

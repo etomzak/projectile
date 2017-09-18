@@ -102,7 +102,7 @@ class Ilmar(Player):
         pass
 
 
-    def reset(self, centerx=None, centery=None):
+    def reset(self, centerx=None, centery=None, bottom=None):
         """
         Ilmar doesn't need to be invincible.
         """

@@ -308,9 +308,12 @@ class Player(Character):
             self._invincible_counter = 60
 
 
-    def reset(self, centerx=None, centery=None):
+    def reset(self, centerx=None, centery=None, bottom=None):
         """
         Reset the Player's position and momentum
+
+        Bottom is the bottom coordinate of the Previous player (if any) to
+        prevent falling through floors.
         """
 
         if centerx is not None:
@@ -319,6 +322,14 @@ class Player(Character):
         if centery is not None:
             self.rect.centery = centery
             self._c_rect.centery = centery
+        if bottom is not None:
+            for platform in self.floors:
+                if self._c_rect.right > platform.rect.left and \
+                        self._c_rect.left < platform.rect.right and \
+                        bottom - 1 < platform.rect.top and \
+                        self._c_rect.bottom - 1 >= platform.rect.top:
+                    self._c_rect.bottom = platform.rect.top - 1
+                    self.rect.centery = self._c_rect.centery
         self._mx = 0.0
         self._j_t = None
         self._invincible_counter = 60
