@@ -85,13 +85,13 @@ class ProjectileBox(PSprite):
                     "targets"         : kwargs["targets"],
                     "decoration_list" : kwargs["decoration_list"]}
 
-        # TODO: Ugly way of getting default num_projectiles
         if kwargs["num_projectiles"] is None:
-            t_p = kwargs["projectile_class"](p_kwargs)
-            kwargs["num_projectiles"] = t_p.max_in_flight
-            self.unused_projectiles.add(t_p)
+            self.max_in_flight = \
+                kwargs["projectile_class"].default_max_in_flight
+        else:
+            self.max_in_flight = kwargs["num_projectiles"]
 
-        while len(self.unused_projectiles) < kwargs["num_projectiles"]:
+        while len(self.unused_projectiles) < self.max_in_flight:
             self.unused_projectiles.add(kwargs["projectile_class"](p_kwargs))
 
     # Fill in Sprite stuff
@@ -103,8 +103,9 @@ class ProjectileBox(PSprite):
     # Ammo can be limited
         self._shots_fired = 0
         if kwargs["max_shots"] is None:
-            kwargs["max_shots"] = self.unused_projectiles.sprites()[0].shots
-        self._max_shots = kwargs["max_shots"]
+            self._max_shots = kwargs["projectile_class"].default_number_shots
+        else:
+            self._max_shots = kwargs["max_shots"]
 
 
     def fire(self, num):

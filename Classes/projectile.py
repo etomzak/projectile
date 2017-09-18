@@ -36,10 +36,13 @@ class Projectile(PSprite):
     @param speed: How fast this type of Projectile moves
     @param damage: How many HP damage this Projectile does
     @param targets: Characters that this Projectile might hit
-    @param max_in_flight: Suggested value for how many of these Projectiles can
-                          be in flight at once
-    @param shots: Suggested value for ProjectileBox._max_shots (i.e., how many
-                  can be fired before a Box runs out)
+
+    class variables:
+        default_max_in_flight: Suggested value for how many of these
+                               Projectiles can be in flight at once
+        default_number_shots: Suggested value for ProjectileBox._max_shots
+                              (i.e., how many can be fired before a Box runs
+                              out)
 
     *Projectile Collisions*
 
@@ -53,6 +56,9 @@ class Projectile(PSprite):
                                             something
     """
 
+    default_max_in_flight = 10
+    default_number_shots = 30
+
     def __init__(self, kwargs):
 
         kwargs["floors"]   = kwargs["platforms"]
@@ -63,8 +69,6 @@ class Projectile(PSprite):
         PSprite.__init__(self, kwargs)
 
         self._owner = kwargs["owner"]
-        self.shots = kwargs["shots"]
-        self.max_in_flight = kwargs["max_in_flight"]
 
     # The constructor above sets up _images
     # Define image and rect; pygame uses these for drawing

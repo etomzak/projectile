@@ -24,6 +24,9 @@ class BB(Projectile):
         targets
     """
 
+    default_max_in_flight = 10
+    default_number_shots = 30
+
     def __init__(self, kwargs):
 
         images = ["BB.png"]
@@ -31,8 +34,6 @@ class BB(Projectile):
         kwargs["images"]        = images
         kwargs["speed"]         = 6.0
         kwargs["damage"]        = 1
-        kwargs["max_in_flight"] = 10
-        kwargs["shots"]         = 30
 
         Projectile.__init__(self, kwargs)
 

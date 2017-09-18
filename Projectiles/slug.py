@@ -24,6 +24,9 @@ class Slug(Projectile):
         targets
     """
 
+    default_max_in_flight = 5
+    default_number_shots = 10
+
     def __init__(self, kwargs):
 
         images = ["Slug.png"]
@@ -31,8 +34,6 @@ class Slug(Projectile):
         kwargs["images"]        = images
         kwargs["speed"]         = 4.0
         kwargs["damage"]        = 5
-        kwargs["max_in_flight"] = 5
-        kwargs["shots"]         = 10
 
         Projectile.__init__(self, kwargs)
 
