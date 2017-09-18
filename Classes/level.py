@@ -182,9 +182,19 @@ class Level():
 
     def baddie_killed(self, baddie):
         """
-        Signal that a baddie got hit.
+        Signal that a baddie was killed so Level can do whatever it needs to.
 
-        Called by the Baddie that was hit.
+        Just a stub here.
+        """
+
+        pass
+
+
+    def baddie_gone(self, baddie):
+        """
+        Signal that a baddie should be removed from play.
+
+        Called by the Baddie.
         """
 
         self.baddies.remove(baddie)

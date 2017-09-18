@@ -120,7 +120,7 @@ class Baddie(Character):
         if self.hp <= 0:
             self._dead_ctr -= 1
             if self._dead_ctr == 0:
-                self._owner.baddie_killed(self)
+                self._owner.baddie_gone(self)
 
         self._update_image()
 
@@ -140,6 +140,7 @@ class Baddie(Character):
 
         if self.hp <= 0:
             self.active = False
+            self._owner.baddie_killed(self)
         else:
             if self._hit_counter == 0:
                 self._decoration_list.append(self)

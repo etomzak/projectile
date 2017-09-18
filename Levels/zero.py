@@ -203,11 +203,13 @@ class Zero(Level):
 
     def baddie_killed(self, baddie):
         """
-        Signal that a baddie got hit.
+        Signal that a Baddie was killed (death animation might still be
+        happening).
+
+        Called by the Baddie.
         """
 
         self._hurt_timer = self._max_hurt_timer
-        Level.baddie_killed(self, baddie)
 
 
     def _add_pu(self):
