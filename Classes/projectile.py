@@ -26,16 +26,18 @@ class Projectile(PSprite):
     constructing a new Projectile, loading images, etc, every time the user
     presses fire.
 
-    @param owner: The ProjectileBox objact that fired this Projectile
-    @param images: Dictionary pointing to the sprite's image files
-                   The Projectile class assumes that images are in a single
-                   array (possibly of length 1)
-    @param platforms: pygame.Group of Platforms that will be used as
-                      horizontal obstacles that the Projectile can't cross
-    @param walls: pygame.Group of Walls that are used as vertical obstacles
-    @param speed: How fast this type of Projectile moves
-    @param damage: How many HP damage this Projectile does
-    @param targets: Characters that this Projectile might hit
+    kwargs must contain:
+        owner: The ProjectileBox objact that fired this Projectile
+        images: Dictionary pointing to the sprite's image files
+                The Projectile class assumes that images are in a single
+                array (possibly of length 1)
+        platforms: pygame.Group of Platforms that will be used as
+                   horizontal obstacles that the Projectile can't cross
+        walls: pygame.Group of Walls that are used as vertical obstacles
+        speed: How fast this type of Projectile moves
+        damage: How many HP damage this Projectile does
+        targets: Characters that this Projectile might hit
+        ... and whatever is required by PSprite
 
     class variables:
         default_max_in_flight: Suggested value for how many of these
