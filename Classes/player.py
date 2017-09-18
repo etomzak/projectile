@@ -188,10 +188,14 @@ class Player(Character):
         #       fast. Fix if it becomes a problem.
         # First, check for collisions with walls and update dx accordingly
         # Only required if there is some horizontal motion
-        # TODO: Switch to using _basic_obstacle_collision()
+        # In case of collision, set _mx to a small non-zero value so Player
+        #   keeps running in place
         dx = round(dx)
         if dx != 0:
-            dx, self._mx = self._check_wall_collision(dx, self._mx)
+            (ddx, _, _, _) = self._basic_obstacle_collision(dx, 0)
+            if ddx:
+                dx += ddx
+                self._mx = 0.1
 
         # Now that dx is set, test for walking off a floor and possibly
         #   set all required variables to start a jump
@@ -208,14 +212,26 @@ class Player(Character):
             self._j_t = 0
             self._jumps = 1
 
+        self.rect.move_ip(dx, 0)
+
         # Check collisions with platforms
         # Only required if there is some vertical motion 
         if dy != 0:
-            dy = self._check_platform_collision(dx, dy)
+            (_, ddy, _, floor) = self._basic_obstacle_collision(0, dy)
+            if ddy:
+                if dy < 0:
+                    # Set jump time to apex when head-bumping
+                    self._j_t = 0
+                else:
+                    # Register landing
+                    self._floor = floor
+                    self._jumps = 0
+                    self._j_t = None
+                dy += ddy
 
         # Update location
         dy = round(dy)
-        self.rect.move_ip(dx, dy)
+        self.rect.move_ip(0, dy)
         self._c_rect.move_ip(dx, dy)
 
         # Update sprite image
@@ -492,40 +508,6 @@ class Player(Character):
         return dx, dy, mx
 
 
-    def _check_wall_collision(self, dx, mx):
-        """
-        Fix dx and _mx values if player is about to go through a wall.
-        """
-
-        # Check if running into a left wall
-        # Can't run into r_walls if not moving left
-        if dx > 0:
-            for wall in self.l_walls:
-                if self._c_rect.right - 1 <= wall.rect.left and \
-                        self._c_rect.right - 1 + dx > wall.rect.left and \
-                        self._c_rect.bottom > wall.rect.top and \
-                        self._c_rect.top < wall.rect.bottom:
-                    dx = wall.rect.left - self._c_rect.right
-                    # Almost kill momentum so player is basically stopped
-                    #   but keeps running in place
-                    mx = 0.1
-                    break
-
-        # Check if running into a right wall
-        # Can't run into l_walls if not moving left
-        if dx < 0:
-            for wall in self.r_walls:
-                if self._c_rect.left > wall.rect.left and \
-                        self._c_rect.left + dx <= wall.rect.left and \
-                        self._c_rect.bottom > wall.rect.top and \
-                        self._c_rect.top < wall.rect.bottom:
-                    dx = wall.rect.left + 1 - self._c_rect.left
-                    mx = 0.1
-                    break
-
-        return dx, mx
-
-
     def _check_walk_off(self, dx):
         """
         Set player to jump if walking off a floor.
@@ -537,40 +519,6 @@ class Player(Character):
                 self._jumps = 1
                 self._j_t = 0
                 self._floor = None
-
-
-    def _check_platform_collision(self, dx, dy):
-        """
-        Fix dy value if it will take the player through a platform.
-        """
-
-        # If head-bumping
-        # Can only happen if moving up
-        if dy < 0:
-            for ceiling in self.ceilings:
-                if self._c_rect.top >= ceiling.rect.bottom and \
-                        self._c_rect.top + dy < ceiling.rect.bottom and \
-                        self._c_rect.left + dx < ceiling.rect.right and \
-                        self._c_rect.right + dx >= ceiling.rect.left:
-                    self._j_t = 0
-                    dy = self._c_rect.top - ceiling.rect.bottom
-                    break
-
-        # Check if landing on a floor and finish jump if that's the case
-        # Can only land when heading down
-        if dy > 0:
-            for floor in self.floors:
-                if self._c_rect.bottom <= floor.rect.top and \
-                        self._c_rect.bottom + dy > floor.rect.top and \
-                        self._c_rect.left + dx < floor.rect.right and \
-                        self._c_rect.right + dx > floor.rect.left:
-                    self._floor = floor
-                    self._jumps = 0
-                    self._j_t = None
-                    dy = floor.rect.top - self._c_rect.bottom
-                    break
-
-        return dy
 
 
     def _populate_images(self):

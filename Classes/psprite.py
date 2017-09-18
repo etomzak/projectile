@@ -106,12 +106,18 @@ class PSprite(pygame.sprite.Sprite):
         obsx and obsy are the obstacles the sprite has collided with in the X
         and Y directions.
 
+        Limitations:
+        * There is no guaranteed order to barriers, so if barriers are very
+        close together, a PSprite might appear to teleport through one to get
+        stuck behind the other. This can only happen to very fast-moving
+        PSprites and very closely spaced barriers.
+
+        * Collisions in the X and Y directions are calculated independently,
+        which can potentially lead to strange results for fast-moving,
+        diagonally-moving PSprites.
+
         The function rounds dx and dy to integers.
         """
-        # TODO: This function works fine for sprites that aren't moving
-        #       diagonally, or sprites that are moving diagonally and not too
-        #       fast. If a sprite is moving both diagonally and fast, it might
-        #       teleport through an obstacle.
 
         if isinstance(dx, float):
             dx = round(dx)

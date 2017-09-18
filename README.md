@@ -115,7 +115,7 @@ You control a player and shoot projectiles at baddies.
 Baddies shoot projectiles back at you.
 Killing baddies gives you points.
 Getting killed by baddies makes you lose the game.
-My current personal best for the default, unmodified game is 1490 points.
+My current personal best for the default, unmodified game is 3945 points.
 
 The game has been designed to make it easy to add new players, baddies, and projectiles.
 Support for adding new levels is coming.
