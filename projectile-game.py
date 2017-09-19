@@ -23,7 +23,7 @@ from pygame.locals import *
 from Classes.character import Character
 from Classes.player import Player
 from Classes.baddie import Baddie
-from Classes.level import Level
+from Classes.countdownLevel import CountdownLevel
 from Classes.heart import Heart
 from Levels.zero import Zero
 from Classes.projectile import Projectile
@@ -39,7 +39,9 @@ def main():
     player_classes = get_subclasses("Characters", Player)
     baddie_classes = get_subclasses("Baddies", Baddie)
     projectile_classes = get_subclasses("Projectiles", Projectile)
-    level_classes = get_subclasses("Levels", Level)
+    # TODO: This needs to be extended when other types of levels become
+    #   available
+    level_classes = get_subclasses("Levels", CountdownLevel)
 
 # Determine the main player character
     primary_player_classname = OPT.player
@@ -79,10 +81,12 @@ def main():
         else:
             print("+ " + pr)
 
-    # TODO: Not yet sure how to handle levels
     print("Found Levels:")
     for level in sorted(level_classes.keys()):
-        print("  " + level_classes[level].__name__)
+        if level in OPT.exclude:
+            print("- " + level)
+        else:
+            print("+ " + level)
 
 # Print quick instructions
     print("\nControls:")
@@ -97,6 +101,12 @@ def main():
         baddie_classes.pop(item, None)
         player_classes.pop(item, None)
         projectile_classes.pop(item, None)
+        level_classes.pop(item, None)
+
+# Check that there is a level
+    if len(level_classes) == 0:
+        print("ERROR: No levels available")
+        raise SystemExit
 
 # Dictionary of available power-ups that a Level can use
     power_ups = {'players': [],
@@ -125,7 +135,9 @@ def main():
 
     # The Level object
     # Most everything happens through the Level
-    a_level = level_classes["Zero"](
+    i = random.randint(0, len(level_classes)-1)
+    level_name = sorted(level_classes.keys())[i]
+    a_level = level_classes[level_name](
         baddie_classes,
         power_ups,
         player_projectile_group,
