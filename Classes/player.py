@@ -212,7 +212,7 @@ class Player(Character):
             self._j_t = 0
             self._jumps = 1
 
-        self.rect.move_ip(dx, 0)
+        self._c_rect.move_ip(dx, 0)
 
         # Check collisions with platforms
         # Only required if there is some vertical motion 
@@ -231,8 +231,8 @@ class Player(Character):
 
         # Update location
         dy = round(dy)
-        self.rect.move_ip(0, dy)
-        self._c_rect.move_ip(dx, dy)
+        self._c_rect.move_ip(0, dy)
+        self.rect.move_ip(dx, dy)
 
         # Update sprite image
         self._update_image()
