@@ -135,8 +135,10 @@ def main():
 
     # The Level object
     # Most everything happens through the Level
-    i = random.randint(0, len(level_classes)-1)
-    level_name = sorted(level_classes.keys())[i]
+    level_name = OPT.level
+    if level_name is None:
+        i = random.randint(0, len(level_classes)-1)
+        level_name = sorted(level_classes.keys())[i]
     a_level = level_classes[level_name](
         baddie_classes,
         power_ups,
@@ -359,9 +361,12 @@ def get_options():
     parser.add_option("-p", "--player", action="store", type="string",
         dest="player", default=None, help="Select default player character")
 
+    parser.add_option("-l", "--level", action="store", type="string",
+        dest="level", default=None, help="Select level to play on")
+
     parser.add_option("-n", "--not", action="append", type="string",
         dest="exclude", default=[],
-        help="Characters, baddies, and projectiles to exclude")
+        help="Characters, baddies, projectiles, and levels to exclude")
 
     parser.add_option("--fps", action="store_true", dest="fps", default=False,
         help="Show game's FPS")
@@ -370,6 +375,9 @@ def get_options():
 
     if OPT.player in OPT.exclude:
         parser.error("Player given with --player then excluded with --not")
+
+    if OPT.level in OPT.exclude:
+        parser.error("Level given with --level then excluded with --not")
 
     return OPT
 
