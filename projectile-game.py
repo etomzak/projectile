@@ -44,10 +44,19 @@ def main():
     level_classes = get_subclasses("Levels", CountdownLevel)
 
 # Determine the main player character
+    # Happens before asset exclusion below to allow complete configuration to
+    #   be printed
     primary_player_classname = OPT.player
     if primary_player_classname is None:
+        # Fred is the game's default
         if "Fred" in OPT.exclude:
-            players = sorted(player_classes.keys())
+            players = []
+            for player in sorted(player_classes.keys()):
+                if player not in OPT.exclude:
+                    players.append(player)
+            if len(players) == 0:
+                print("ERROR: No players available")
+                raise SystemExit
             i = random.randint(0, len(players)-1)
             primary_player_classname = players[i]
         else:
