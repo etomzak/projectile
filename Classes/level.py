@@ -248,6 +248,9 @@ class Level():
         Spawn a random Baddie and add it to baddies.
         """
 
+        if len(self._baddie_classes) == 0:
+            return
+
         i = random.randint(0, len(self._baddie_classes)-1)
         baddie = sorted(self._baddie_classes.keys())[i]
 
