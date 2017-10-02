@@ -148,6 +148,11 @@ def main():
     if level_name is None:
         i = random.randint(0, len(level_classes)-1)
         level_name = sorted(level_classes.keys())[i]
+
+    if level_name not in level_classes:
+        print("Error: I don't know any " + level_name)
+        raise SystemExit
+
     a_level = level_classes[level_name](
         baddie_classes,
         power_ups,
