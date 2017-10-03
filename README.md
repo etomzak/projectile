@@ -117,9 +117,8 @@ Killing baddies gives you points.
 Getting killed by baddies makes you lose the game.
 My current personal best for the default, unmodified game is 3945 points.
 
-The game has been designed to make it easy to add new players, baddies, and projectiles.
-Support for adding new levels is coming.
-Currently there is one level and two each of players, baddies, and projectiles.
+The game has been designed to make it easy to add new players, baddies, projectiles, and levels.
+Currently there are two each of players, baddies, projectiles, and levels.
 
 ### Controls
 
@@ -138,7 +137,7 @@ Currently there is one level and two each of players, baddies, and projectiles.
 
 | Player | Description |
 |--------|-------------|
-| ![Fred](/Images/Fred_neutral.png) | **Fred** is your garden-variety stick figure guy. He's trying to get back his gold or rescue the princess or something. Fred starts out with 5 health and shoots BBs by default. |
+| ![Fred](/Images/Fred_neutral.png) | **Fred** is your garden-variety stick figure guy. He's trying to get back his gold or rescue the princess or something. Fred starts out with 20 health and shoots BBs by default. |
 | ![Ilmar](/Images/Ilmar_stand_straight.png) | **Ilmar** is a tank. He can't be hurt by projectiles, and he shoots slugs by default. Every time he fires, there is a 10% chance that the projectile will backfire and Ilmar will blow up. |
 
 #### Baddies
@@ -154,3 +153,10 @@ Currently there is one level and two each of players, baddies, and projectiles.
 |------------|-------------|
 | ![BB](Images/BB.png) | **BB**s are the most basic projectile. They cause 1 damage. A BB power-up has 30 BBs, and normally a player can have 10 BBs in flight at once.
 | ![Slug](Images/Slug.png) | **Slug**s are heavy projectiles that do 5 damage. A slug power-up has 10 slugs, and a player can normally have 5 slugs in flight at once. |
+
+#### Levels
+
+| Level | Description |
+|-------|-------------|
+| <img src="Images/Level_Zero.png" width="100" alt="Zero"> | **Zero** is a simple level with some barriers. |
+| <img src="Images/BigRock.png" width="100" alt="Big Rock"> | **BigRock** is a hectic level with a picture of a big rock in the background. |
