@@ -60,7 +60,7 @@ class Fred(Player):
         Player.__init__(self, kwargs)
 
         # Make Fred's collision box a bit narrower than the images
-        self._c_rect.width = self.rect.width-6
+        self._c_rect.width = self.rect.width-8
         self._c_rect.centerx = self.rect.centerx
 
 
