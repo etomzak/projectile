@@ -132,11 +132,11 @@ class PSprite(pygame.sprite.Sprite):
         # If the sprite is moving right
         if dx > 0:
             for wall in self.l_walls:
-                if self._c_rect.right - 1 <= wall.rect.left and \
-                        self._c_rect.right - 1 + dx > wall.rect.left and \
+                if self._c_rect.right - 1 < wall.rect.left and \
+                        self._c_rect.right - 1 + dx >= wall.rect.left and \
                         self._c_rect.bottom > wall.rect.top and \
                         self._c_rect.top < wall.rect.bottom:
-                    ddx = wall.rect.left - (self._c_rect.right - 1 + dx)
+                    ddx = wall.rect.left - (self._c_rect.right - 1 + dx) - 1
                     obsx = wall
                     break
         # If the sprite is moving left
