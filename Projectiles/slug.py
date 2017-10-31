@@ -34,6 +34,7 @@ class Slug(Projectile):
         kwargs["images"]        = images
         kwargs["speed"]         = 4.0
         kwargs["damage"]        = 5
+        kwargs["radius"]        = 3.5
 
         Projectile.__init__(self, kwargs)
 

@@ -34,6 +34,7 @@ class BB(Projectile):
         kwargs["images"]        = images
         kwargs["speed"]         = 6.0
         kwargs["damage"]        = 1
+        kwargs["radius"]        = 2
 
         Projectile.__init__(self, kwargs)
 

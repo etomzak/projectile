@@ -39,6 +39,10 @@ class Projectile(PSprite):
         targets: Characters that this Projectile might hit
         ... and whatever is required by PSprite
 
+    kwargs can contain:
+        radius: How big the Projectile is when calculating target collisions
+                (inferred from image size if not given)
+
     class variables:
         default_max_in_flight: Suggested value for how many of these
                                Projectiles can be in flight at once
@@ -77,7 +81,10 @@ class Projectile(PSprite):
         self.image = self._images[0]
         self.rect = self.image.get_rect()
         self._c_rect = self.rect.copy()
-        self.radius = (self.rect.width + self.rect.height) / 4.0
+        if "radius" in kwargs:
+            self.radius = kwargs["radius"]
+        else:
+            self.radius = (self.rect.width + self.rect.height) / 4.0
 
     # Set class variables
         self._speed = kwargs["speed"]
