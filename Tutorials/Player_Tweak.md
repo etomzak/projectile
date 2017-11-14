@@ -13,7 +13,7 @@ Then, it will show how Fred can be tweaked.
 Fred is defined in the `fred.py` file in the `Characters` directory.
 Open `fred.py` with your text editor of choice.
 If you have worked with Python before, it's probably easiest to use whatever editor you used then.
-Otherwise, Notepad on Windows, TextEdit on MacOS, or gEdit on Linux will work.
+Otherwise, Notepad on Windows, TextEdit on MacOS, or gedit on Linux will work.
 
 In Python, every line that starts with a `#` is a comment and can be ignored.
 
@@ -103,21 +103,21 @@ This code makes that happen.
 
 Fred's characteristics can be changed by changing the lines that start with `kwargs[...` in `fred.py`.
 For example, the `multi_jumps` key controls how many mid-air jumps a player can make.
-When `kwargs["multi_jumps"]` is `2`, then the player can double-jump--the player can jump, and then jump one more time while in the air.
+When `kwargs["multi_jumps"]` is `2`, then the player can double-jump&mdash;the player can jump, and then jump one more time while in the air.
 Try changing `multi_jumps` to `3` like this:
 
 ```python
         kwargs["multi_jumps"]           = 3
 ```
 
-Then save fred.py and run the Projectile game.
+Then save `fred.py` and run the Projectile game.
 Fred should now be able to jump twice in mid-air.
 
 The `jump_velocity` key controls how fast Fred moves upward at the start of a jump.
 Change `jump_velocity` from `-5.0` to `-10.0`, save `fred.py`, and run the game.
 Fred should now jump much higher than before.
 
-Here is a table describing all the keys in `fred.py`.
+Here is a table describing all the changeable keys in `fred.py`.
 Try changing them to see what happens.
 Remember to save `fred.py` after every change.
 Note that some values might make the game act funny or even crash.
@@ -125,11 +125,11 @@ Note that some values might make the game act funny or even crash.
 | Key | Description |
 |-----|-------------|
 |`horizontal_speed`| How fast Fred can run |
-|`horiztonal_inertia`| How hard it is for Fred to change direction |
+|`horizontal_inertia`| How hard it is for Fred to change direction |
 |`multi_jumps`| How many consequitive jumps Fred can make without landing |
 |`vertical_acceleration`| When jumping, how quickly Fred stops going up and starts coming down |
 |`jump_velocity`| How fast Fred moves upward at the start of a jump |
-|`fpi`| Animation frames-per-image--how quickly the player animation runs |
+|`fpi`| Animation frames-per-image&mdash;how quickly the player animation runs |
 |`projectile_class`| What type of projectile Fred uses (note: changing this requires importing the right projectile at the top of `fred.py`) |
 |`num_projectiles`| How many projectiles Fred can have in flight at once |
 |`hp`| Fred's maximum health (each in-game heart is worth four HP) |
