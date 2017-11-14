@@ -1,8 +1,8 @@
 # Projectile
 
-A totally legit pygame game
-
-(But very much in alpha.)
+Projectile is a totally legit pygame game.
+Yes, it's a bit basic, but it's designed so that even a beginner programmer can hack and tweak it.
+Continue down this page for installation instructions, or check out the [tutorials](/Tutorials/Index.md) page for things to break and do with the game.
 
 ## Installation
 
