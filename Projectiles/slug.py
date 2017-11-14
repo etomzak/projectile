@@ -26,6 +26,7 @@ class Slug(Projectile):
 
     default_max_in_flight = 5
     default_number_shots = 10
+    icon = "Slug_icon.png"
 
     def __init__(self, kwargs):
 

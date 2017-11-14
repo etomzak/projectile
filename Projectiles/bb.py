@@ -26,6 +26,7 @@ class BB(Projectile):
 
     default_max_in_flight = 10
     default_number_shots = 30
+    icon = "BB_icon.png"
 
     def __init__(self, kwargs):
 
