@@ -34,6 +34,8 @@ class PSprite(pygame.sprite.Sprite):
             self._image_dir = os.path.join(os.path.dirname(class_path),
                 "Images")
             self._images = self._string_to_image(kwargs["images"])
+        else:
+            self._images = None
 
         # Dummy rect (real one should come from a subclass)
         self.rect = Rect(0,0,0,0)

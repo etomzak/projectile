@@ -131,6 +131,7 @@ class Level():
         self.baddie_projectiles.clear(screen, self.backdrop)
         self._player_group.clear(screen, self.backdrop)
         self._player_projectile_group.clear(screen, self.backdrop)
+        self._power_ups.clear(screen, self.backdrop)
         for s in self._decoration_list:
             s.clear_decoration(screen, self.backdrop)
 
@@ -142,9 +143,9 @@ class Level():
 
         for s in self._decoration_list:
             s.draw_decoration(screen)
+        self._power_ups.draw(screen)
         self.baddies.draw(screen)
         self.baddie_projectiles.draw(screen)
-        self._power_ups.draw(screen)
         self._player_group.draw(screen)
         self._player_projectile_group.draw(screen)
 

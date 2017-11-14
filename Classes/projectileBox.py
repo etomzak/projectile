@@ -47,11 +47,16 @@ class ProjectileBox(PSprite):
 
         if "num_projectiles" not in kwargs:
             kwargs["num_projectiles"] = 5
-        if "projectile_class" not in kwargs:
+        kwargs["images"] = None
+        if "projectile_class" in kwargs:
+            if kwargs["projectile_class"] is not None:
+                kwargs["images"] = kwargs["projectile_class"].icon
+        else:
             kwargs["projectile_class"] = None
         if "max_shots" not in kwargs:
             kwargs["max_shots"] = -1
-        kwargs["images"] = None
+
+        self._icon = kwargs["images"]
 
         PSprite.__init__(self, kwargs)
 
@@ -95,7 +100,12 @@ class ProjectileBox(PSprite):
             self.unused_projectiles.add(kwargs["projectile_class"](p_kwargs))
 
     # Fill in Sprite stuff
-        self.image = self.unused_projectiles.sprites()[0].image.copy()
+        # If no icon given, copy a Projectile's image
+        if self._images is None:
+            self.image = self.unused_projectiles.sprites()[0].image.copy()
+        else:
+            self.image = self._images
+
         self.rect = self.image.get_rect(center=(kwargs["centerx"],
                                                 kwargs["centery"]))
         self._c_rect = self.rect.copy()
@@ -168,6 +178,23 @@ class ProjectileBox(PSprite):
             return min(len(self.unused_projectiles),
                        self._max_shots-self._shots_fired)
 
+
+    def enable_box(self):
+        """
+        Only enable box decoration if no icon given.
+        """
+
+        if not self._icon:
+            PSprite.enable_box(self)
+
+
+    def disable_box(self):
+        """
+        Only disable box decoration if no icon given.
+        """
+
+        if not self._icon:
+            PSprite.disable_box(self)
 
 if __name__ == '__main__':
     print("Don't run me. Run projectile-game.py")

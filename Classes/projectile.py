@@ -49,6 +49,8 @@ class Projectile(PSprite):
         default_number_shots: Suggested value for ProjectileBox._max_shots
                               (i.e., how many can be fired before a Box runs
                               out)
+        icon: File of an icon image for the Projectile (Projectile image used
+                (if not given)
 
     *Projectile Collisions*
 
@@ -62,8 +64,11 @@ class Projectile(PSprite):
                                             something
     """
 
+    # TODO: Some items in kwargs might make more sense as class variables
+    #       (e.g., speed, damage)
     default_max_in_flight = 10
     default_number_shots = 30
+    icon = None
 
     def __init__(self, kwargs):
 
