@@ -113,7 +113,7 @@ For a character like Fred, these functions are defined in `Classes/player.py`.
 Both Fred and Ilmar are of the `Player` class, so they automatically have access to these functions.
 (The `class Fred(Player):` statement in `fred.py` is what tells Python that Fred is of the `Player` class.)
 
-Ilmar needs its own versions of these functions, because he has some special abilities.
+Ilmar needs his own versions of these functions, because he has some special abilities.
 Ilmar is a tank and cannot fire downward, and Ilmar sometimes explodes when firing.
 Ilmar's `fire()` function makes this happen.
 You can compare the `fire()` function in `ilmar.py` and the one in `player.py` to see what's different.

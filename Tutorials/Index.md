@@ -6,5 +6,6 @@ The first few assume that you have some computer literacy, but no programming ex
 
 * [Player character tweak tutorial](Player_Tweak.md)
 * [Player character cloning tutorial](Player_Clone.md)
+* [Level creation tutorial](Level_Make.md)
 * (Check back for more ...)
 
