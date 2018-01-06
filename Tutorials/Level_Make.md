@@ -181,7 +181,7 @@ Once you have finished drawing your image, save it into the `Images` directory a
 
 ### Writing the code
 
-The code portion of the level tells the game where the barriers are in you level and where to spawn stuff.
+The code portion of the level tells the game where the barriers are in your level and where to spawn stuff.
 The quickest way to get started writing the code for a new level is to copy an existing level.
 This is similar to how you copied an existing character in the [Player cloning tutorial](Player_Clone.md).
 
@@ -252,7 +252,7 @@ You can add more than one barrier with each call to `add()`:
 Before you add your barriers into your level description file, make sure to delete all the barriers left over from Zero.
 
 By default, the `Level` class (through the `CountdownLevel` class) provides a set of barriers around the level image that prevents sprites from leaving the screen area.
-You can remove these barriers by putting this code before any barrier `add()` calls (see `Levels/bigRock.py`):
+You can remove these barriers by putting this code after the call to `CountdownLevel.__init__()` and before any barrier `add()` calls (see `Levels/bigRock.py`):
 
 ```python
         self.floors = pygame.sprite.Group()
