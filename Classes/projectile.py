@@ -91,10 +91,13 @@ class Projectile(PSprite):
         else:
             self.radius = (self.rect.width + self.rect.height) / 4.0
 
-    # Set class variables
+    # Set object variables
         self._speed = kwargs["speed"]
         self.damage = kwargs["damage"]
         self._dir = 0 #direction
+        # FP location
+        self._xf = float(self.rect.centerx)
+        self._yf = float(self.rect.centery)
 
         # If the Projectile has collided with something
         self.has_collided = False
@@ -121,15 +124,17 @@ class Projectile(PSprite):
         #       Projectiles that change direction mid-flight
         # If a Projectile adjusts _c_rect, then its reset() will need to make
         #   the adjustment after Projectile.reset() is called
-        # math.sin(), math.cos() are left-haned b/c pygame's y is flipped.
+        # math.sin(), math.cos() are left-handed b/c pygame's y is flipped.
         #   pygames' rotate is right-handed.
         self.image = pygame.transform.rotate(self._images[0], -direction)
         self.rect = self.image.get_rect()
         self._c_rect = self.rect.copy()
-        self.rect.centerx = centerx
-        self.rect.centery = centery
-        self._c_rect.centerx = centerx
-        self._c_rect.centery = centery
+        self._xf = centerx
+        self._yf = centery
+        self.rect.centerx = round(self._xf)
+        self.rect.centery = round(self._yf)
+        self._c_rect.centerx = self.rect.centerx
+        self._c_rect.centery = self.rect.centery
 
         self.has_collided = False
 
@@ -142,10 +147,14 @@ class Projectile(PSprite):
         #       Characters. This might lead to some weird shadowing/shielding
         #       behavior. Revisit if it becomes and issue.
 
-        dx = round(math.cos(self._dir) * self._speed)
-        dy = round(math.sin(self._dir) * self._speed)
+        dxf = math.cos(self._dir) * self._speed
+        dyf = math.sin(self._dir) * self._speed
 
-        _, _, targetA, targetB = self._basic_obstacle_collision(dx, dy)
+        # Take account of difference between int and float coordinates
+        # (Like in Baddies, e.g., XOR)
+        _, _, targetA, targetB = self._basic_obstacle_collision(
+            dxf + self._xf - self.rect.centerx,
+            dyf + self._yf - self.rect.centery)
 
         if targetA is not None:
             self._owner.hit_a_target(self, targetA)
@@ -154,8 +163,14 @@ class Projectile(PSprite):
             self._owner.hit_a_target(self, targetB)
             self.has_collided = True
 
-        self.rect.move_ip(dx, dy)
-        self._c_rect.move_ip(dx, dy)
+        self._xf += dxf
+        self._yf += dyf
+
+        self.rect.centerx = round(self._xf)
+        self.rect.centery = round(self._yf)
+
+        self._c_rect.centerx = self.rect.centerx
+        self._c_rect.centery = self.rect.centery
 
         targets = pygame.sprite.spritecollide(self, self.targets, False,
             pygame.sprite.collide_circle)
