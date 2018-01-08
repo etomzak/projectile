@@ -72,12 +72,13 @@ class Ilmar(Player):
             return
 
         # Or whatever else is in the _box
-        slug = self._box.fire(1)[0]
+        slugs = self._box.fire(1)
 
         # Ilmar sometimes blows up
         if random.randint(0, 9) == 0:
             self.hp = 0
-            self._box.recycle(slug)
+            for slug in slugs:
+                self._box.recycle(slug)
             print("Projectile backfired")
             return
 
@@ -87,8 +88,9 @@ class Ilmar(Player):
         elif self._point_h == -1:
             direction = 180
 
-        slug.reset(centerx = self.rect.centerx, centery = self.rect.centery,
-            direction=direction)
+        for slug in slugs:
+            slug.reset(centerx = self.rect.centerx,
+                centery = self.rect.centery, direction=direction)
 
 
     def got_hit(self, projectile, attacker):

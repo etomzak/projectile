@@ -76,6 +76,9 @@ class ProjectileBox(PSprite):
         else:
             raise TypeError("projectile must be a subclass of Projectile")
 
+        # How many Projectiles fire() actually fires
+        self._multi_shot = kwargs["projectile_class"].default_multi_shot
+
     # Create Projectiles
         self.fired_projectiles = kwargs["fired_projectiles"]
         self.unused_projectiles = pygame.sprite.RenderPlain()
@@ -95,6 +98,7 @@ class ProjectileBox(PSprite):
                 kwargs["projectile_class"].default_max_in_flight
         else:
             self.max_in_flight = kwargs["num_projectiles"]
+        self.max_in_flight *= self._multi_shot
 
         while len(self.unused_projectiles) < self.max_in_flight:
             self.unused_projectiles.add(kwargs["projectile_class"](p_kwargs))
@@ -134,7 +138,7 @@ class ProjectileBox(PSprite):
         if self._max_shots > 0 and self._shots_fired >= self._max_shots:
             self.owner.box_empty(self)
 
-        prs = self.unused_projectiles.sprites()[0:num]
+        prs = self.unused_projectiles.sprites()[0:num*self._multi_shot]
         self.unused_projectiles.remove(prs)
         self.fired_projectiles.add(prs)
 
@@ -173,9 +177,9 @@ class ProjectileBox(PSprite):
         """
 
         if self._max_shots < 0:
-            return len(self.unused_projectiles)
+            return len(self.unused_projectiles) // self._multi_shot
         else:
-            return min(len(self.unused_projectiles),
+            return min(len(self.unused_projectiles) // self._multi_shot,
                        self._max_shots-self._shots_fired)
 
 
@@ -195,6 +199,7 @@ class ProjectileBox(PSprite):
 
         if not self._icon:
             PSprite.disable_box(self)
+
 
 if __name__ == '__main__':
     print("Don't run me. Run projectile-game.py")

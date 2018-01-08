@@ -386,7 +386,9 @@ class Player(Character):
         if self.hp <= 0:
             return
 
-        pr = self._box.fire(1)[0]
+        # Some types of Projectiles are meant to fire more than one Projectile
+        #   per fire() for snazzy effect
+        prs = self._box.fire(1)
 
         direction = 0
         if self._point_v == 1:
@@ -396,8 +398,9 @@ class Player(Character):
         elif self._point_h == -1:
             direction = 180
 
-        pr.reset(centerx = self.rect.centerx, centery = self.rect.centery,
-            direction=direction)
+        for pr in prs:
+            pr.reset(centerx = self.rect.centerx, centery = self.rect.centery,
+                direction=direction)
 
 
     def draw_decoration(self, screen):

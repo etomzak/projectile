@@ -116,7 +116,7 @@ class XOR(Baddie):
         """
 
         bbs = self._box.fire(4)
-        for i in range(4):
+        for i in range(len(bbs)):
             bbs[i].reset(self.rect.centerx, self.rect.centery, i*90)
 
 
