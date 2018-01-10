@@ -122,7 +122,7 @@ class BigRock(CountdownLevel):
 
         # Power-up stuff
         self._pu_spawn_x = 87
-        self._pu_spawn_y = 75
+        self._pu_spawn_y = 60
 
         # Max number of baddies
         self._max_baddies = 10
