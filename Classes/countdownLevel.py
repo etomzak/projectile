@@ -208,7 +208,8 @@ class CountdownLevel(Level):
             if length == 0:
                 return
             i = random.randint(0, length-1)
-            pu_kwargs = {"centerx"           : self._pu_spawn_x,
+            pu_kwargs = {"owner"             : self,
+                         "centerx"           : self._pu_spawn_x,
                          "centery"           : self._pu_spawn_y,
                          "floors"            : self.floors,
                          "l_walls"           : self.l_walls,

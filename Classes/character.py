@@ -18,6 +18,7 @@ class Character(PSprite):
     Base class for all characters (player-controlled and NPC).
 
     kwargs must contain:
+        owner: The Level object that owns this Character
         centerx: Character spawn x-coordinate
         centery: Character spawn y-coordinate
         images["neutral"]: default image (see also PSprite)
@@ -28,6 +29,8 @@ class Character(PSprite):
     def __init__(self, kwargs):
 
         PSprite.__init__(self, kwargs)
+
+        self._owner = kwargs["owner"]
 
     # Initialize image and related variables (images loaded by
     #   Character.__init__())

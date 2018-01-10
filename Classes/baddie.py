@@ -21,7 +21,6 @@ class Baddie(Character):
     Don't instantiate this class; subclass it.
 
     kwargs must contain:
-        owner: The Level object that owns this Baddie
         floors: pygame.sprite.Group of Platforms that the sprite can stand on
         l_walls: pygame.sprite.Group of Walls that block the sprite moving
                  right
@@ -50,7 +49,6 @@ class Baddie(Character):
 
         self._populate_images()
 
-        self._owner = kwargs["owner"]
         self.points = kwargs["points"]
 
     # Location and default movement characteristics

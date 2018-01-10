@@ -56,8 +56,6 @@ class Player(Character):
         self._fpi = kwargs["fpi"]
         self._prev_image_series = "none" # Name of previous animation
 
-        self.points = 0
-
         # Signal that this Player has died
         self.dead = False
         # Number of frames to display dead animation
@@ -243,10 +241,11 @@ class Player(Character):
         Signal that a Projectile fired by this Player has hit a target.
 
         This function is called by the Projectile.
+        Points are only counted if self is still alive.
         """
 
-        if isinstance(target, Baddie) and target.hp <= 0:
-            self.points += target.points
+        if isinstance(target, Baddie) and target.hp <= 0 and self.hp > 0:
+            self._owner.points += target.points
 
 
     def got_hit(self, projectile, attacker):

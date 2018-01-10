@@ -162,7 +162,8 @@ def main():
 
     # The main Player object
     # Game over when a_dude dies
-    p_kwargs = {"centerx"           : a_level.player_spawn_x,
+    p_kwargs = {"owner"             : a_level,
+                "centerx"           : a_level.player_spawn_x,
                 "centery"           : a_level.player_spawn_y,
                 "floors"            : a_level.floors,
                 "l_walls"           : a_level.l_walls,
@@ -267,9 +268,9 @@ def main():
 
     # Draw score
         if pygame.font:
-            if a_level.player.points != score:
+            if a_level.points != score:
                 screen.blit(a_level.backdrop, score_rect, score_rect)
-                score = a_level.player.points
+                score = a_level.points
                 score_text = font.render(str(score), False, (0, 0, 0))
                 score_rect = score_text.get_rect(top=2, right=637)
 

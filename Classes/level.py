@@ -47,6 +47,8 @@ class Level():
     def __init__(self, backdrop, baddie_classes, power_ups=None,
             player_projectile_group=None, decoration_list=None):
 
+        self.points = 0
+
     # Set up backdrop
         class_path = os.path.split(os.path.abspath(__file__))[0]
         image_dir = os.path.join(os.path.dirname(class_path), "Images")
@@ -222,7 +224,6 @@ class Level():
 
         t_plr = self.player
         t_plr.deactivate()
-        plr.points = t_plr.points
         self._player_group.remove(t_plr)
         self._player_stack.append(t_plr)
         self._player_group.add(plr)
@@ -238,7 +239,6 @@ class Level():
         self._player_group.remove(a_plr)
         a_plr.deactivate()
         b_plr = self._player_stack.pop()
-        b_plr.points = a_plr.points
         b_plr.activate()
         self._player_group.add(b_plr)
         self.player = b_plr
