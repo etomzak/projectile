@@ -154,8 +154,9 @@ Currently there are two each of players, baddies, projectiles, and levels.
 
 | Projectile | Description |
 |------------|-------------|
-| ![BB](Images/BB.png) | **BB**s are the most basic projectile. They cause 1 damage. A BB power-up has 30 BBs, and normally a player can have 10 BBs in flight at once.
-| ![Slug](Images/Slug.png) | **Slug**s are heavy projectiles that do 5 damage. A slug power-up has 10 slugs, and a player can normally have 5 slugs in flight at once. |
+| ![BB](Images/BB_icon.png) | **BB**s are the most basic projectile. They cause 1 damage. A BB power-up has 30 BBs, and normally a player can have 10 BBs in flight at once.
+| ![Slug](Images/Slug_icon.png) | **Slug**s are heavy projectiles that do 5 damage. A slug power-up has 10 slugs, and a player can normally have 5 slugs in flight at once. |
+| ![Blaster](Images/Blaster_icon.png) | The **Blaster** is a laser gun! Every shot of the blaster fires 5 fast-moving laser bursts, and each burst does 10 damage. Because it's so powerful, a blaster power-up can fire only 3 shots before it burns out. A player can normally have 1 shot in flight at once. Don't point at airplanes. |
 
 #### Levels
 
