@@ -43,21 +43,16 @@ class ProjectileBox(PSprite):
 
     def __init__(self, kwargs):
 
-        # TODO: Fix writing into kwargs just to read out later in this function
-
-        if "num_projectiles" not in kwargs:
-            kwargs["num_projectiles"] = 5
+    # Set up images filed for PSprite
         kwargs["images"] = None
         if "projectile_class" in kwargs:
             if kwargs["projectile_class"] is not None:
+                # kwargs["projectile_class"].icon can be None
                 kwargs["images"] = kwargs["projectile_class"].icon
         else:
             kwargs["projectile_class"] = None
-        if "max_shots" not in kwargs:
-            kwargs["max_shots"] = -1
 
-        self._icon = kwargs["images"]
-
+    # Initialize PSprite
         PSprite.__init__(self, kwargs)
 
         self.owner = kwargs["owner"]
@@ -93,11 +88,14 @@ class ProjectileBox(PSprite):
                     "targets"         : kwargs["targets"],
                     "decoration_list" : kwargs["decoration_list"]}
 
-        if kwargs["num_projectiles"] is None:
+        if "num_projectiles" not in kwargs:
+            self.max_in_flight = 5
+        elif kwargs["num_projectiles"] is None:
             self.max_in_flight = \
                 kwargs["projectile_class"].default_max_in_flight
         else:
             self.max_in_flight = kwargs["num_projectiles"]
+
         self.max_in_flight *= self._multi_shot
 
         while len(self.unused_projectiles) < self.max_in_flight:
@@ -105,9 +103,12 @@ class ProjectileBox(PSprite):
 
     # Fill in Sprite stuff
         # If no icon given, copy a Projectile's image
+        # _has_icon is if the Projectile has defined an icon image
         if self._images is None:
+            self._has_icon = False
             self.image = self.unused_projectiles.sprites()[0].image.copy()
         else:
+            self._has_icon = True
             self.image = self._images
 
         self.rect = self.image.get_rect(center=(kwargs["centerx"],
@@ -116,7 +117,10 @@ class ProjectileBox(PSprite):
 
     # Ammo can be limited
         self._shots_fired = 0
-        if kwargs["max_shots"] is None:
+
+        if "max_shots" not in kwargs:
+            self._max_shots = -1
+        elif kwargs["max_shots"] is None:
             self._max_shots = kwargs["projectile_class"].default_number_shots
         else:
             self._max_shots = kwargs["max_shots"]
@@ -188,7 +192,7 @@ class ProjectileBox(PSprite):
         Only enable box decoration if no icon given.
         """
 
-        if not self._icon:
+        if not self._has_icon:
             PSprite.enable_box(self)
 
 
@@ -197,7 +201,7 @@ class ProjectileBox(PSprite):
         Only disable box decoration if no icon given.
         """
 
-        if not self._icon:
+        if not self._has_icon:
             PSprite.disable_box(self)
 
 
