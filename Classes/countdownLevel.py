@@ -1,4 +1,4 @@
-# Copyright (C) 2017
+# Copyright (C) 2017-2018
 # Author: Erik Tomusk
 #
 # This is free software, distributed under the GNU GPL version 3.
@@ -233,7 +233,7 @@ class CountdownLevel(Level):
                          "projectile_class"  : \
                             self._power_up_dict["projectiles"][i],
                          "fired_projectiles" : self._player_projectile_group,
-                         "num_projectiles"   : None,
+                         "max_in_flight"     : None,
                          "max_shots"         : None,
                          "targets"           : self.baddies,
                          "centerx"           : self._pu_spawn_x,

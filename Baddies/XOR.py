@@ -42,7 +42,7 @@ class XOR(Baddie):
         kwargs["images"]           = images
         kwargs["fpi"]              = 4
         kwargs["projectile_class"] = BB
-        kwargs["num_projectiles"]  = 12
+        kwargs["max_in_flight"]    = 12
         kwargs["hp"]               = 3
         kwargs["points"]           = 20
 

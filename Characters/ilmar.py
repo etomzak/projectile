@@ -51,7 +51,7 @@ class Ilmar(Player):
         kwargs["jump_velocity"]         = -5.0
         kwargs["fpi"]                   = 4
         kwargs["projectile_class"]      = Slug
-        kwargs["num_projectiles"]       = 5
+        kwargs["max_in_flight"]         = 5
         # Ilmar's hp is never reduced so is effectively infinite
         kwargs["hp"]                    = 1
 

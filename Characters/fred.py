@@ -54,7 +54,7 @@ class Fred(Player):
         kwargs["jump_velocity"]         = -5.0
         kwargs["fpi"]                   = 4
         kwargs["projectile_class"]      = BB
-        kwargs["num_projectiles"]       = 10
+        kwargs["max_in_flight"]         = 10
         kwargs["hp"]                    = 20
 
         Player.__init__(self, kwargs)

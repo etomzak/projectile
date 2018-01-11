@@ -76,7 +76,7 @@ You can find all of the `.png` files in the `Images` directory.
         kwargs["jump_velocity"]         = -5.0
         kwargs["fpi"]                   = 4
         kwargs["projectile_class"]      = BB
-        kwargs["num_projectiles"]       = 10
+        kwargs["max_in_flight"]         = 10
         kwargs["hp"]                    = 20
 ```
 
@@ -131,6 +131,6 @@ Note that some values might make the game act funny or even crash.
 |`jump_velocity`| How fast Fred moves upward at the start of a jump |
 |`fpi`| Animation frames-per-image&mdash;how quickly the player animation runs |
 |`projectile_class`| What type of projectile Fred uses (note: changing this requires importing the right projectile at the top of `fred.py`) |
-|`num_projectiles`| How many projectiles Fred can have in flight at once |
+|`max_in_flight`| How many projectiles Fred can have in flight at once |
 |`hp`| Fred's maximum health (each in-game heart is worth four HP) |
 

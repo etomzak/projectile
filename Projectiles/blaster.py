@@ -1,4 +1,4 @@
-# Copyright (C) 2017
+# Copyright (C) 2018
 # Author: Erik Tomusk
 #
 # This is free software, distributed under the GNU GPL version 3.

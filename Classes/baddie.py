@@ -1,4 +1,4 @@
-# Copyright (C) 2017
+# Copyright (C) 2017-2018
 # Author: Erik Tomusk
 #
 # This is free software, distributed under the GNU GPL version 3.
@@ -29,7 +29,7 @@ class Baddie(Character):
                   under
         fpi: Frames per image for animation (larger is slower)
         projectile_class: The Projectile class that this Baddie uses
-        num_projectiles: Maximum number of in-flight Projectiles this
+        max_in_flight:   Maximum number of in-flight Projectiles this
                          Baddie can have
         fired_projectiles: pygame.sprite.Group where fired Projectiles go.
                            owner keeps track of these so they stay in play even
@@ -88,7 +88,7 @@ class Baddie(Character):
                     "ceilings"          : kwargs["ceilings"],
                     "projectile_class"  : kwargs["projectile_class"],
                     "fired_projectiles" : kwargs["fired_projectiles"],
-                    "num_projectiles"   : kwargs["num_projectiles"],
+                    "max_in_flight"     : kwargs["max_in_flight"],
                     "max_shots"         : -1,
                     "targets"           : kwargs["targets"],
                     "centerx"           : 0,

@@ -41,7 +41,7 @@ class Kreutzwald(Baddie):
         kwargs["images"]           = images
         kwargs["fpi"]              = 4
         kwargs["projectile_class"] = None
-        kwargs["num_projectiles"]  = 0
+        kwargs["max_in_flight"]    = 0
         kwargs["hp"]               = 1
         kwargs["points"]           = 5
 

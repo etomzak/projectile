@@ -1,4 +1,4 @@
-# Copyright (C) 2017
+# Copyright (C) 2017-2018
 # Author: Erik Tomusk
 #
 # This is free software, distributed under the GNU GPL version 3.
@@ -38,8 +38,8 @@ class Player(Character):
                        make for higher jumps)
         fpi: Frames per image for animation (larger is slower)
         projectile_class: The Projectile class that this Player uses
-        num_projectiles: Maximum number of in-flight Projectiles this Player
-                         can have
+        max_in_flight: Maximum number of in-flight Projectiles this Player
+                       can have
         targets: pygame.sprite.Group of Baddies this Player could hit
         fired_projectiles: pygame.sprite.Group where fired Projectiles go
         ... and whatever is required by Character
@@ -116,7 +116,7 @@ class Player(Character):
                     "ceilings"          : kwargs["ceilings"],
                     "projectile_class"  : kwargs["projectile_class"],
                     "fired_projectiles" : self.fired_projectiles,
-                    "num_projectiles"   : kwargs["num_projectiles"],
+                    "max_in_flight"     : kwargs["max_in_flight"],
                     "max_shots"         : -1,
                     "targets"           : targets,
                     "centerx"           : 0,

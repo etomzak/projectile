@@ -1,4 +1,4 @@
-# Copyright (C) 2017
+# Copyright (C) 2017-2018
 # Author: Erik Tomusk
 #
 # This is free software, distributed under the GNU GPL version 3.
@@ -29,8 +29,8 @@ class ProjectileBox(PSprite):
         projectile_class: The Projectile class stored by this Box
         fired_projectiles: pygame.sprite.Group where in-flight Projectiles
                            should go (so Projectiles can outlive the Box)
-        num_projectiles: Maximum number of simultaneous in-flight
-                         Projectiles (None = Projectile default)
+        max_in_flight: Maximum number of simultaneous in-flight
+                       Projectiles (None = Projectile default)
         max_shots: Number of Projectiles that can be fired before the Box
                    is exhausted (negative = infinite;
                    None = Projectile default)
@@ -43,7 +43,7 @@ class ProjectileBox(PSprite):
 
     def __init__(self, kwargs):
 
-    # Set up images filed for PSprite
+    # Set up image files for PSprite
         kwargs["images"] = None
         if "projectile_class" in kwargs:
             if kwargs["projectile_class"] is not None:
@@ -88,13 +88,13 @@ class ProjectileBox(PSprite):
                     "targets"         : kwargs["targets"],
                     "decoration_list" : kwargs["decoration_list"]}
 
-        if "num_projectiles" not in kwargs:
+        if "max_in_flight" not in kwargs:
             self.max_in_flight = 5
-        elif kwargs["num_projectiles"] is None:
+        elif kwargs["max_in_flight"] is None:
             self.max_in_flight = \
                 kwargs["projectile_class"].default_max_in_flight
         else:
-            self.max_in_flight = kwargs["num_projectiles"]
+            self.max_in_flight = kwargs["max_in_flight"]
 
         self.max_in_flight *= self._multi_shot
 
