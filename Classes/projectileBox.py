@@ -46,11 +46,12 @@ class ProjectileBox(PSprite):
     # Set up image files for PSprite
         kwargs["images"] = None
         if "projectile_class" in kwargs:
-            if kwargs["projectile_class"] is not None:
+            self.projectile_class = kwargs["projectile_class"]
+            if self.projectile_class is not None:
                 # kwargs["projectile_class"].icon can be None
-                kwargs["images"] = kwargs["projectile_class"].icon
+                kwargs["images"] = self.projectile_class.icon
         else:
-            kwargs["projectile_class"] = None
+            self.projectile_class = None
 
     # Initialize PSprite
         PSprite.__init__(self, kwargs)
@@ -59,20 +60,20 @@ class ProjectileBox(PSprite):
 
     # If projectile_class is not given, then this Box will be a hollow shell
     #   of its true self (i.e., an empty placeholder)
-        if kwargs["projectile_class"] is None:
+        if self.projectile_class is None:
             return
 
     # Make sure projectile_class is ok
-        if inspect.isclass(kwargs["projectile_class"]) and \
-                issubclass(kwargs["projectile_class"], Projectile) and \
-                kwargs["projectile_class"] is not Projectile:
+        if inspect.isclass(self.projectile_class) and \
+                issubclass(self.projectile_class, Projectile) and \
+                self.projectile_class is not Projectile:
             # all good
             pass
         else:
             raise TypeError("projectile must be a subclass of Projectile")
 
         # How many Projectiles fire() actually fires
-        self._multi_shot = kwargs["projectile_class"].default_multi_shot
+        self._multi_shot = self.projectile_class.default_multi_shot
 
     # Create Projectiles
         self.fired_projectiles = kwargs["fired_projectiles"]
@@ -91,15 +92,14 @@ class ProjectileBox(PSprite):
         if "max_in_flight" not in kwargs:
             self.max_in_flight = 5
         elif kwargs["max_in_flight"] is None:
-            self.max_in_flight = \
-                kwargs["projectile_class"].default_max_in_flight
+            self.max_in_flight = self.projectile_class.default_max_in_flight
         else:
             self.max_in_flight = kwargs["max_in_flight"]
 
         self.max_in_flight *= self._multi_shot
 
         while len(self.unused_projectiles) < self.max_in_flight:
-            self.unused_projectiles.add(kwargs["projectile_class"](p_kwargs))
+            self.unused_projectiles.add(self.projectile_class(p_kwargs))
 
     # Fill in Sprite stuff
         # If no icon given, copy a Projectile's image
@@ -121,7 +121,7 @@ class ProjectileBox(PSprite):
         if "max_shots" not in kwargs:
             self._max_shots = -1
         elif kwargs["max_shots"] is None:
-            self._max_shots = kwargs["projectile_class"].default_number_shots
+            self._max_shots = self.projectile_class.default_number_shots
         else:
             self._max_shots = kwargs["max_shots"]
 

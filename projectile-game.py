@@ -183,7 +183,7 @@ def main():
     if pygame.font:
         font = pygame.font.Font(None, 20)
         score_text = font.render(str(score), False, (0, 0, 0))
-        score_rect = score_text.get_rect(top=2, right=637)
+        score_rect = score_text.get_rect(top=2, right=598)
 
         screen.blit(score_text, score_rect)
 
@@ -205,6 +205,23 @@ def main():
     heart_area = Rect(3, 2, 90, 15)
 
     pygame.display.flip()
+
+# Ammo count
+    if pygame.font:
+        ammo_count = 0
+        prev_ammo_count = 0
+        ammo_class = None
+        prev_ammo_class = None
+        ammo_img_surf = None
+        ammo_img_rect = None
+        ammo_img_area = pygame.Rect(600, 2, 22, 16)
+        ammo_count_text = []
+        for i in range(100):
+            ammo_count_text.append(font.render(str(i).zfill(2), False,
+                (0, 0, 0)))
+
+        # "02" is the widest ammo display at 16 pixels
+        ammo_count_area = ammo_count_text[2].get_rect(top=2, right=637)
 
 # FPS display
     if OPT.fps and pygame.font:
@@ -266,15 +283,39 @@ def main():
             screen.blit(a_level.backdrop, heart_area, heart_area)
             health = a_level.player.hp
 
-    # Draw score
+    # Draw various text
         if pygame.font:
+
+    # Draw score
             if a_level.points != score:
                 screen.blit(a_level.backdrop, score_rect, score_rect)
                 score = a_level.points
                 score_text = font.render(str(score), False, (0, 0, 0))
-                score_rect = score_text.get_rect(top=2, right=637)
+                score_rect = score_text.get_rect(top=2, right=598)
 
             screen.blit(score_text, score_rect)
+
+    # Draw ammo count
+            if a_level.player._box._max_shots == -1:
+                ammo_count = 99
+            else:
+                ammo_count = a_level.player._box._max_shots - \
+                    a_level.player._box._shots_fired
+
+            ammo_class = a_level.player._box.projectile_class
+            if ammo_class is not prev_ammo_class:
+                prev_ammo_class = ammo_class
+                ammo_img_surf = a_level.player._box.unused_projectiles.\
+                    sprites()[0].image.copy()
+                ammo_img_rect = ammo_img_surf.get_rect(centerx=611, centery=8)
+                screen.blit(a_level.backdrop, ammo_img_area, ammo_img_area)
+
+            if ammo_count != prev_ammo_count:
+                screen.blit(a_level.backdrop, ammo_count_area, ammo_count_area)
+                prev_ammo_count = ammo_count
+
+            screen.blit(ammo_count_text[ammo_count], ammo_count_area)
+            screen.blit(ammo_img_surf, ammo_img_rect)
 
     # Draw FPS
             if OPT.fps:

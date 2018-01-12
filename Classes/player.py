@@ -364,7 +364,6 @@ class Player(Character):
         Called by the ProjectileBox.
         """
 
-        print("ProjectileBox empty")
         if self._box is not box:
             print("Attempted to pop wrong box")
             print(" self:", type(self).__name__)
